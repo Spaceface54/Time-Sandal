@@ -15,10 +15,44 @@ class logo extends Phaser.Scene {
     create() {
         this.w = this.game.config.width;
         this.h = this.game.config.height;
+        let game = this.add.image(-260, 250, 'game');
+        let flop =  this.add.image(1240, 259, 'flop');
+        
+        this.tweens.add({
+            targets: game,
+            x: 300,
+            scale: 1,
+            duration: 1000,
+            ease: 'circ.in'
+        });
+
+        this.tweens.add({
+            targets: flop,
+            x: 770,
+            scale: 1,
+            duration: 1000,
+            ease: 'circ.in'
+        });
+
+        this.tweens.add({
+            targets: game,
+            scale: 1,
+            delay: 1500,
+            angle: 3240,
+            duration: 1000,
+            ease: 'cubic.inOut'
+        });
+
+        this.tweens.add({
+            targets: flop,
+            delay: 1500,
+            scale: 1,
+            angle:-3240,
+            duration: 1000,
+            ease: 'cubic.inOut'
+        });
 
         //+9pt offset on 'flop' y-coord
-        this.add.image(300, 100, 'game');
-        this.add.image(770, 109, 'flop');
         this.add.text(500, 500, "Company logo")
             .setColor(0xffffff);
         //this.add.image(500,400,'gameflop');
