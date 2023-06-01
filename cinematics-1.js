@@ -16,11 +16,13 @@ class logo extends Phaser.Scene {
         this.w = this.game.config.width;
         this.h = this.game.config.height;
         let game = this.add.image(-260, 250, 'game');
-        let flop =  this.add.image(1240, 259, 'flop');
+        let flop =  this.add.image(1240, 260, 'flop');
+        let gameflop = this.add.image(504,258,'gameflop')
+        .setVisible(false);
         
         this.tweens.add({
             targets: game,
-            x: 300,
+            x: 310,
             scale: 1,
             duration: 1000,
             ease: 'circ.in'
@@ -33,23 +35,38 @@ class logo extends Phaser.Scene {
             duration: 1000,
             ease: 'circ.in'
         });
+        
+        this.time.delayedCall(1500,() => {
+            game.setVisible(false);
+            flop.setVisible(false);
+            gameflop.setVisible(true);
+
+        })
 
         this.tweens.add({
-            targets: game,
+            targets: gameflop,
             scale: 1,
-            delay: 1500,
-            angle: 3240,
-            duration: 1000,
+            delay: 1600,
+            angle: 6480,
+            duration: 2000,
             ease: 'cubic.inOut'
+        });
+       
+        this.time.delayedCall(4000,() => {
+            game.setVisible(true);
+            flop.setVisible(true);
+            gameflop.setVisible(false);
+            flop.setOrigin(0.1,0.9);
+            flop.setPosition(622,335);
         });
 
         this.tweens.add({
             targets: flop,
-            delay: 1500,
+            delay: 4200,
             scale: 1,
-            angle:-3240,
-            duration: 1000,
-            ease: 'cubic.inOut'
+            angle: 70,
+            duration: 2000,
+            ease: 'Quint.inOut'
         });
 
         //+9pt offset on 'flop' y-coord
