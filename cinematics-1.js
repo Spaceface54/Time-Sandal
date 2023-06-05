@@ -76,7 +76,7 @@ class logo extends Phaser.Scene {
         })
 
         //+9pt offset on 'flop' y-coord
-        this.add.text(500, 500, "Company logo")
+        this.add.text(500, 500, "Studio logo")
             .setColor(0xffffff);
         //this.add.image(500,400,'gameflop');
     }
@@ -148,6 +148,14 @@ class title extends Phaser.Scene {
         const shape1 = new Phaser.Geom.Rectangle(200,50,600,270);
         
         sandEmitter.addEmitZone({type:'random',source: shape1});
+
+        sandEmitter.createGravityWell({
+            x: 520,
+            y: 400,
+            power: 4.2,
+            epsilon: 650,
+            gravity: 200
+        });
     }
 
 }
@@ -192,7 +200,7 @@ const config = {
     width: 1040,
     height: 612,
     backgroundColor: 0xbbbbbb,
-    scene: [logo,title,intro,end]
-    //scene:[title]
+    //scene: [logo,title,intro,end]
+    scene:[title]
 };
 const game = new Phaser.Game(config);
