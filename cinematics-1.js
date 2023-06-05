@@ -9,7 +9,7 @@ class logo extends Phaser.Scene {
         this.load.path = "./assets/";
         this.load.image('game', 'Game.png');
         this.load.image('flop', 'Flop.png');
-        this.load.image('gameflop', 'Gameflop.png');
+        this.load.image('gameflop', 'GameFlop.png');
 
     }
     create() {
