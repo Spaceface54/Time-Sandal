@@ -36,7 +36,7 @@ class logo extends Phaser.Scene {
             ease: 'circ.in'
         });
         
-        this.time.delayedCall(1500,() => {
+        this.time.delayedCall(1100,() => {
             game.setVisible(false);
             flop.setVisible(false);
             gameflop.setVisible(true);
@@ -51,7 +51,7 @@ class logo extends Phaser.Scene {
             ease: 'cubic.inOut'
         });
        
-        this.time.delayedCall(4000,() => {
+        this.time.delayedCall(3570,() => {
             game.setVisible(true);
             flop.setVisible(true);
             gameflop.setVisible(false);
@@ -61,24 +61,24 @@ class logo extends Phaser.Scene {
 
         this.tweens.add({
             targets: flop,
-            delay: 4200,
+            delay: 3700,
             scale: 1,
             angle: 70,
             duration: 2000,
             ease: 'Quint.inOut'
         });
 
+        this.time.delayedCall(5000,() => {
+            this.cameras.main.fade(1000, 0, 0, 0);
+            this.time.delayedCall(1100, () => {
+            this.scene.start('title');
+            });
+        })
+
         //+9pt offset on 'flop' y-coord
         this.add.text(500, 500, "Company logo")
             .setColor(0xffffff);
         //this.add.image(500,400,'gameflop');
-
-        this.input.on('pointerdown', () => {
-            this.cameras.main.fade(1000, 0, 0, 0);
-            this.time.delayedCall(1000, () => {
-                this.scene.start('title');
-            });
-        });
     }
 }
 
@@ -95,6 +95,7 @@ class title extends Phaser.Scene {
      }
 
     create() { 
+        this.cameras.main.fadeIn(1000,0,0,0);
         this.add.text(500, 500, "Title Screen")
         .setColor(0xffffff);
         let title1 = this.add.image(520,180,'title1')
@@ -102,11 +103,34 @@ class title extends Phaser.Scene {
         let start = this.add.text(520,400,"Start")
         .setFontSize(40)
         .setColor(0xffffff)
-        .setOrigin(0.5);
+        .setOrigin(0.5)
+        .setInteractive()
+        .setShadow(2,2,'#000',5)
+        .on('pointerover', () => {
+            start.setScale(1.5);
+        })
+        .on('pointerdown', () => {
+            this.cameras.main.fade(1000, 0, 0, 0);
+            this.time.delayedCall(1000, () => {
+                this.scene.start('intro');
+            });
+        })
+        .on('pointerout', () => {
+            start.setScale(1);
+        });
+        
         let exit = this.add.text(520,450,"Exit")
         .setFontSize(40)
         .setColor(0xffffff)
-        .setOrigin(0.5);
+        .setOrigin(0.5)
+        .setInteractive()
+        .setShadow(2,2,'#000',5)
+        .on('pointerover', () => {
+            exit.setScale(1.5);
+        })
+        .on('pointerout', () => {
+            exit.setScale(1);
+        });
 
         console.log(start.originX);
         let sandEmitter = this.add.particles(0,0,'sand',{
@@ -124,15 +148,6 @@ class title extends Phaser.Scene {
         const shape1 = new Phaser.Geom.Rectangle(200,50,600,270);
         
         sandEmitter.addEmitZone({type:'random',source: shape1});
-
-
-
-        this.input.on('pointerdown', () => {
-            this.cameras.main.fade(1000, 0, 0, 0);
-            this.time.delayedCall(1000, () => {
-                this.scene.start('intro');
-            });
-        });
     }
 
 }
