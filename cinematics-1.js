@@ -19,7 +19,7 @@ class logo extends Phaser.Scene {
         let flop =  this.add.image(1240, 260, 'flop');
         let gameflop = this.add.image(504,258,'gameflop')
         .setVisible(false);
-        
+
         this.tweens.add({
             targets: game,
             x: 310,
@@ -88,11 +88,45 @@ class title extends Phaser.Scene {
         super("title");
     }
 
-    preload() { }
+    preload() {
+        this.load.path = "./assets/";
+        this.load.image('sand','Sand.png');
+        this.load.image('title1','Title 1.png');
+        this.load.image('title2','Title 2.png');
+     }
 
     create() { 
         this.add.text(500, 500, "Title Screen")
         .setColor(0xffffff);
+        let title1 = this.add.image(520,180,'title1')
+        .setScale(0.8,0.8);
+        let start = this.add.text(520,400,"Start")
+        .setFontSize(40)
+        .setColor(0xffffff)
+        .setOrigin(0.5);
+        let exit = this.add.text(520,450,"Exit")
+        .setFontSize(40)
+        .setColor(0xffffff)
+        .setOrigin(0.5);
+
+        console.log(start.originX);
+        let sandEmitter = this.add.particles(0,0,'sand',{
+            scale: 0.3,
+            lifespan: 10000,
+            gravityY: 50,
+            frequency: 20,
+            maxVelocityX: 200,
+            maxVelocityY: 200,
+            blendMode: 'ADD',
+            alpha: 55
+        });
+
+        //Particle spawn box (xcoordstart,ycoordstart,xlength,ylength)
+        const shape1 = new Phaser.Geom.Rectangle(200,50,600,270);
+        
+        sandEmitter.addEmitZone({type:'random',source: shape1});
+
+
 
         this.input.on('pointerdown', () => {
             this.cameras.main.fade(1000, 0, 0, 0);
@@ -139,14 +173,12 @@ class end extends Phaser.Scene {
 
 }
 
-
-
-
 const config = {
     type: Phaser.AUTO,
     width: 1040,
     height: 612,
     backgroundColor: 0xbbbbbb,
-    scene: [logo,title,intro,end]
+    //scene: [logo,title,intro,end]
+    scene:[title]
 };
 const game = new Phaser.Game(config);
