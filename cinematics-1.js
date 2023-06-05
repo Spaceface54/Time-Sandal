@@ -40,7 +40,6 @@ class logo extends Phaser.Scene {
             game.setVisible(false);
             flop.setVisible(false);
             gameflop.setVisible(true);
-
         })
 
         this.tweens.add({
@@ -178,7 +177,7 @@ const config = {
     width: 1040,
     height: 612,
     backgroundColor: 0xbbbbbb,
-    //scene: [logo,title,intro,end]
-    scene:[title]
+    scene: [logo,title,intro,end]
+    //scene:[title]
 };
 const game = new Phaser.Game(config);
