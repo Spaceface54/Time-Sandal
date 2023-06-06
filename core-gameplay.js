@@ -1,66 +1,39 @@
-class playscene extends Phaser.Scene {
+class playscene extends gamescene {
     cursors;
     constructor(){
         super("playscene");
-        this.player;
-        this.w;
-        this.h;
-        this.state = false;
-        this.updatelist = [];
-        this.playerspeed = 7;
-        this.touchingground = false; //for jumping
-        this.unjumpable = [] //list of things that can't be jumped on
         
     }
-    preload(){
-        this.load.path ="./assets/";
-        this.load.image('guy', 'guy.png');
+    images(){
         this.load.image('firebarrel', 'burningbarrel.png');
         this.load.image('ash', 'ashpile.png');
         this.load.image('wood', 'wood.png');
         this.load.image('firewood', 'flamingwood.png');
         this.load.image('floor', 'floor.png');
-        this.load.image('forwardback', 'forwardback.png');
+        this.load.image('flag', 'flag.png');
     }
-    create(){
-        this.w = this.game.config.width;
-        this.h = this.game.config.height;
+    onEnter(){
+        
+        
+    }
 
-        this.player = this.matter.add.image(this.w*0.8, this.h*0.7, 'guy');
-        this.player.setScale(0.3);
-        this.player.setBounce(0.2);
-        this.player.body.inertia = Infinity;
-        console.log(this.player.body.inertia);
-
+    level1(){
         let wall = new wood(this, this.w*0.5,  this.h*0.6, false, "wood", "ash");
         wall.unburnt.setScale(2);
-        this.unjumpable.push(wall.unburnt);
+        this.makeUnjumpapable(wall.unburnt);
         let burningbarrel = new wood(this, this.w*0.65,  this.h*0.7, true, "firebarrel", "ash");
         burningbarrel.burn();
 
-        this.updatelist.push(wall);
-        this.updatelist.push(burningbarrel);
+        this.addUpdates(wall, burningbarrel);
+
+        new flag(this, this.w*0.2, this.h*0.682, "flag", this.player, "winscene", 0);
+        
 
         let ground = this.matter.add.image(this.w*0.5, this.h, 'floor');
         ground.setScale(10);
         ground.setStatic(true);
         ground.angle = 90;
-
-
-
-
-        this.input.on("pointerdown", (pointer) =>{
-            if(pointer.y < this.h*0.5 && this.touchingground){ //&& this.player.body.touching.down){
-                this.player.setVelocityY(-10,0);
-            }
-            else if(pointer.y > this.h*0.5){
-                this.state = !this.state;
-                this.updatelist.forEach(element => {
-                    element.futureswap(this.state);
-                });
-            }
-        })
-
+        
         this.matter.world.on('collisionstart', (event, bodyA, bodyB) =>{
             console.log(bodyB.velocity.y);
                 if(bodyB === burningbarrel.unburnt.body && bodyA === wall.unburnt.body){
@@ -72,41 +45,29 @@ class playscene extends Phaser.Scene {
                     }
                 }
             });
-        this.matter.world.on('collisionstart', (event, bodyA, bodyB) =>{
-                //is touching ground
-                console.log("touching");
-                if(bodyA === this.player.body && this.unjumpable.find(element => element.body === bodyB) == undefined){
-                    this.touchingground = true;
-                }
-            });
-        this.matter.world.on('collisionend', (event, bodyA, bodyB) =>{
-                if(bodyA === this.player.body || bodyB === this.player.body){
-                    this.touchingground = false;
-                }
-            });
-        
     }
-    update(){
-        this.player.setAngularVelocity(0);
-        let {x,y,isDown} = this.input.activePointer;
-        if (x<this.w*0.4)
-        {
-            this.player.setVelocityX(-this.playerspeed, 0);
 
-        }
-        else if (x>this.w*0.6)
-        {
-            this.player.setVelocityX(this.playerspeed, 0 );
-
-        }
-        else
-        {
-            this.player.setVelocityX(0);
-        }
-        //impliment friction
+    updates(){
     }
 }
 
+class flag{
+    constructor(scene, x, y, img, player, key, levelnum){
+        this.flagimg = scene.matter.add.image(x, y, img);
+        let transitionDuration = 1000;
+        this.flagimg.setStatic(true);
+        this.flagimg.setScale(0.5);
+        
+        scene.matter.world.on('collisionstart', (event, bodyA, bodyB) =>{
+            if(bodyA === player.body && bodyB === this.flagimg.body){
+                scene.cameras.main.fade(transitionDuration, 0, 0, 0);
+                scene.time.delayedCall(transitionDuration, () => {
+                    scene.scene.start(key, {levelnum: levelnum});
+                });
+            }
+        });
+    }
+}
 class wood {
     constructor(scene, x, y, floppy, texture, ashtexture){
         this.unburnt = scene.matter.add.image(x, y, texture);
@@ -150,6 +111,20 @@ class wood {
             this.ash.y = 3000;
         }
     }
+}
+
+class winscene extends Phaser.Scene{
+    constructor(){
+        super("winscene");
+    }
+    create(){
+        let w = this.game.config.width;
+        let h = this.game.config.height;
+        let wintext = this.add.text(w*0.5, h*0.5, "YOU WON!");
+        wintext.setOrigin(0.5, 0.5);
+        wintext.setScale(4);
+    }
+
 }
 /*
 class wood {
@@ -258,10 +233,10 @@ const config = {
     physics: {
         default: 'matter',
         matter: {
-            debug:true,
+            //debug:true,
         }
     },
     backgroundColor: 0xbbbbbb,
-    scene: [playscene]
+    scene: [playscene, winscene]
 };
 const game = new Phaser.Game(config);
