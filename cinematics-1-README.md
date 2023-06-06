@@ -12,4 +12,4 @@
 - Visually rich with particles and drop shadows
 - Buttons slightly grow when hovered
 - Start button progresses to next scene what clicked / tapped
-
+- Title text changes over time
