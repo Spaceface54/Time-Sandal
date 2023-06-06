@@ -9,17 +9,17 @@ class logo extends Phaser.Scene {
         this.load.path = "./assets/";
         this.load.image('game', 'Game.png');
         this.load.image('flop', 'Flop.png');
-        this.load.image('gameflop', 'Gameflop.png');
+        this.load.image('gameflop', 'GameFlop.png');
 
     }
     create() {
         this.w = this.game.config.width;
         this.h = this.game.config.height;
         let game = this.add.image(-260, 250, 'game');
-        let flop =  this.add.image(1240, 260, 'flop');
-        let gameflop = this.add.image(504,258,'gameflop')
-        .setVisible(false);
-        
+        let flop = this.add.image(1240, 260, 'flop');
+        let gameflop = this.add.image(504, 258, 'gameflop')
+            .setVisible(false);
+
         this.tweens.add({
             targets: game,
             x: 310,
@@ -35,12 +35,11 @@ class logo extends Phaser.Scene {
             duration: 1000,
             ease: 'circ.in'
         });
-        
-        this.time.delayedCall(1500,() => {
+
+        this.time.delayedCall(1100, () => {
             game.setVisible(false);
             flop.setVisible(false);
             gameflop.setVisible(true);
-
         })
 
         this.tweens.add({
@@ -51,35 +50,35 @@ class logo extends Phaser.Scene {
             duration: 2000,
             ease: 'cubic.inOut'
         });
-       
-        this.time.delayedCall(4000,() => {
+
+        this.time.delayedCall(3570, () => {
             game.setVisible(true);
             flop.setVisible(true);
             gameflop.setVisible(false);
-            flop.setOrigin(0.1,0.9);
-            flop.setPosition(622,335);
+            flop.setOrigin(0.1, 0.9);
+            flop.setPosition(622, 335);
         });
 
         this.tweens.add({
             targets: flop,
-            delay: 4200,
+            delay: 3700,
             scale: 1,
             angle: 70,
             duration: 2000,
             ease: 'Quint.inOut'
         });
 
-        //+9pt offset on 'flop' y-coord
-        this.add.text(500, 500, "Company logo")
-            .setColor(0xffffff);
-        //this.add.image(500,400,'gameflop');
-
-        this.input.on('pointerdown', () => {
+        this.time.delayedCall(5000, () => {
             this.cameras.main.fade(1000, 0, 0, 0);
-            this.time.delayedCall(1000, () => {
+            this.time.delayedCall(1100, () => {
                 this.scene.start('title');
             });
-        });
+        })
+
+        //+9pt offset on 'flop' y-coord
+        this.add.text(500, 500, "Studio logo")
+            .setColor(0xffffff);
+        //this.add.image(500,400,'gameflop');
     }
 }
 
@@ -88,18 +87,144 @@ class title extends Phaser.Scene {
         super("title");
     }
 
-    preload() { }
+    preload() {
+        this.load.path = "./assets/";
+        this.load.image('sand', 'Sand.png');
+        this.load.image('title1', 'Title 1.png');
+        this.load.image('title2', 'Title 2.png');
+        this.load.image('title3', 'Title 3.png');
+        this.load.image('title4', 'Title 4.png');
+    }
 
-    create() { 
+    create() {
+        this.cameras.main.fadeIn(1000, 0, 0, 0);
         this.add.text(500, 500, "Title Screen")
-        .setColor(0xffffff);
-
-        this.input.on('pointerdown', () => {
-            this.cameras.main.fade(1000, 0, 0, 0);
-            this.time.delayedCall(1000, () => {
-                this.scene.start('intro');
+            .setColor(0xffffff);
+        let title1 = this.add.image(520, 180, 'title1')
+            .setScale(0.8, 0.8);
+        let title2 = this.add.image(520, 180, 'title2')
+            .setScale(0.8, 0.8)
+            .setVisible(false);
+        let title3 = this.add.image(520, 180, 'title3')
+            .setScale(0.8, 0.8)
+            .setVisible(false);
+        let title4 = this.add.image(520, 180, 'title4')
+            .setScale(0.8, 0.8)
+            .setVisible(false);
+        let start = this.add.text(520, 400, "Start")
+            .setFontSize(40)
+            .setColor(0xffffff)
+            .setOrigin(0.5)
+            .setInteractive()
+            .setShadow(2, 2, '#000', 5)
+            .on('pointerover', () => {
+                start.setScale(1.5);
+            })
+            .on('pointerdown', () => {
+                this.cameras.main.fade(1000, 0, 0, 0);
+                this.time.delayedCall(1000, () => {
+                    this.scene.start('intro');
+                });
+            })
+            .on('pointerout', () => {
+                start.setScale(1);
             });
+
+        this.time.delayedCall(2000, () => {
+            title1.setVisible(false);
+            title2.setVisible(true);
         });
+
+        this.time.delayedCall(3000, () => {
+            title2.setVisible(false);
+            title3.setVisible(true);
+        });
+
+        this.time.delayedCall(4000, () => {
+            title3.setVisible(false);
+            title4.setVisible(true);
+        });
+
+
+        let exit = this.add.text(520, 450, "Exit")
+            .setFontSize(40)
+            .setColor(0xffffff)
+            .setOrigin(0.5)
+            .setInteractive()
+            .setShadow(2, 2, '#000', 5)
+            .on('pointerover', () => {
+                exit.setScale(1.5);
+            })
+            .on('pointerout', () => {
+                exit.setScale(1);
+            });
+
+        // let sandEmitter = this.add.particles(0,0,'sand',{
+        //     scale: 0.3,
+        //     lifespan: 10000,
+        //     gravityY: 50,
+        //     frequency: 20,
+        //     maxVelocityX: 200,
+        //     maxVelocityY: 200,
+        //     blendMode: 'ADD',
+        //     alpha: 55
+        // });
+
+        let leftEmitter = this.add.particles(0, 0, 'sand', {
+            scale: 0.3,
+            lifespan: 6000,
+            gravityX: 150,
+            frequency: 60,
+            maxVelocityX: 400,
+            maxVelocityY: 200,
+            blendMode: 'ADD',
+            //alpha: 0.1
+        });
+
+        let rightEmitter = this.add.particles(0, 0, 'sand', {
+            scale: 0.3,
+            lifespan: 6000,
+            gravityX: -150,
+            frequency: 60,
+            maxVelocityX: 400,
+            maxVelocityY: 200,
+            blendMode: 'ADD',
+            //alpha: 1
+        });
+
+        //Particle spawn box (xcoordstart,ycoordstart,xlength,ylength)
+        const shape1 = new Phaser.Geom.Rectangle(200, 50, 600, 270);
+        const shapeLeft = new Phaser.Geom.Rectangle(0, 20, 0, 300);
+        const shapeRight = new Phaser.Geom.Rectangle(1040, 20, 0, 300);
+
+        //sandEmitter.addEmitZone({type:'random',source: shape1});
+        leftEmitter.addEmitZone({ type: 'random', source: shapeLeft });
+        rightEmitter.addEmitZone({ type: 'random', source: shapeRight });
+
+        // sandEmitter.createGravityWell({
+        //     x: 520,
+        //     y: 400,
+        //     power: 4.2,
+        //     epsilon: 650,
+        //     gravity: 200
+        // });
+
+        // leftEmitter.createGravityWell({
+        //     x: 520,
+        //     y: 200,
+        //     power: 4.2,
+        //     epsilon: 250,
+        //     gravity: 200
+        // });
+
+        // rightEmitter.createGravityWell({
+        //     x: 520,
+        //     y: 200,
+        //     power: 4.2,
+        //     epsilon: 650,
+        //     gravity: 200
+        // });
+
     }
 
 }
@@ -121,7 +246,7 @@ class intro extends Phaser.Scene {
                 this.scene.start('end');
             });
         });
-     }
+    }
 
 }
 
@@ -132,21 +257,19 @@ class end extends Phaser.Scene {
 
     preload() { }
 
-    create() { 
+    create() {
         this.add.text(500, 500, "Story ending.")
             .setColor(0xffffff);
     }
 
 }
 
-
-
-
 const config = {
     type: Phaser.AUTO,
     width: 1040,
     height: 612,
     backgroundColor: 0xbbbbbb,
-    scene: [logo,title,intro,end]
+    scene: [logo,title]
+    //scene: [title]
 };
 const game = new Phaser.Game(config);
