@@ -1,3 +1,4 @@
+let c = 1;
 class Studio extends Phaser.Scene {
     constructor() {
         super('studio');
@@ -11,6 +12,8 @@ class Studio extends Phaser.Scene {
             this.cameras.main.fade(1000, 0, 0, 0);
             this.time.delayedCall(1000, () => {
                 this.scene.start('title');
+                c = 2; //just wanted to add a global variable that is remembered & updated across scenes
+                console.log('c: ' +c);
             });
         });
     }
@@ -26,7 +29,12 @@ class Title extends Phaser.Scene {
         this.add.text(this.game.config.width / 4, 500, "CLICK TO PLAY").setFontSize(45);
 
         this.input.on('pointerdown', () => {
-            this.scene.start('l1')
+            this.cameras.main.fadeOut(1250, 255,250,205);
+            this.time.delayedCall(1250, () => {
+                this.scene.start('l1');
+            });
+            c = 3;
+            console.log('c: ' +c);
         })
     }
 }
@@ -37,6 +45,7 @@ class Level1 extends Phaser.Scene {
     }
 
     create() {
+        this.cameras.main.fadeIn(1250, 255,250,205);
         this.add.text(300, 150, "*LEVEL 1 - tutorial*").setFontSize(55);
         this.add.text(300, 300, "Drag from left to right to \ncomplete the level").setFontSize(40);
         this.g = this.add.circle(this.game.config.width - 400, this.game.config.height - 200, 50, 0x0000ff);
@@ -61,6 +70,8 @@ class Level1 extends Phaser.Scene {
     update() {
         if (this.b.x == this.g.x) {
             this.scene.start('l2');
+            c = 4;
+            console.log('c: ' +c);
         }
     }
 }
@@ -96,6 +107,8 @@ class Level2 extends Phaser.Scene{
     update() {
         if (this.b.x == this.g.x) {
             this.scene.start('l3');
+            c = 5;
+            console.log('c: ' +c);
         }
     }
 }
@@ -129,6 +142,8 @@ class Level3 extends Phaser.Scene {
     update() {
         if (this.b.x == this.g.x) {
             this.scene.start('end');
+            c = 6;
+            console.log('c: ' +c);
         }
     }
 }
@@ -144,6 +159,8 @@ class Ending extends Phaser.Scene{
 
         this.input.on('pointerdown', () =>{
             this.scene.start('l1');
+            c = 7;
+            console.log('c: ' +c);
         })
     }
 }
