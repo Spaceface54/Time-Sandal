@@ -7,7 +7,7 @@
 ## Currently not applicable.
 
 # Reachability:
-## I believe all scenes should be reachable. 
+## I believe all scenes should be reachable via tapping and dragging. 
 
 # Transitions:
 ## Currently no fancy transitions. 
