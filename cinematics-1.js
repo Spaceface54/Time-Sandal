@@ -174,7 +174,7 @@ class title extends Phaser.Scene {
             scale: 0.3,
             lifespan: 6000,
             gravityX: 150,
-            frequency: 30,
+            frequency: 60,
             maxVelocityX: 400,
             maxVelocityY: 200,
             blendMode: 'ADD',
@@ -185,7 +185,7 @@ class title extends Phaser.Scene {
             scale: 0.3,
             lifespan: 6000,
             gravityX: -150,
-            frequency: 30,
+            frequency: 60,
             maxVelocityX: 400,
             maxVelocityY: 200,
             blendMode: 'ADD',
@@ -269,7 +269,7 @@ const config = {
     width: 1040,
     height: 612,
     backgroundColor: 0xbbbbbb,
-    //scene: [logo,title,intro,end]
-    scene: [title]
+    scene: [logo,title]
+    //scene: [title]
 };
 const game = new Phaser.Game(config);

@@ -8,7 +8,7 @@
 - Fade out at end
 
 - Interactive Cinematic
-- Title screen
+- Prototype Title screen (NOT FINAL)
 - Visually rich with particles and drop shadows
 - Buttons slightly grow when hovered
 - Start button progresses to next scene what clicked / tapped
