@@ -12,6 +12,7 @@ class playscene extends gamescene {
         this.load.image('floor', 'floor.png');
         this.load.image('flag', 'flag.png');
         this.load.image('sand', 'sandpile.png');
+        this.load.image('wind', 'wind.png');
     }
     onEnter(){
         
@@ -49,6 +50,7 @@ class playscene extends gamescene {
     }
 
     level2(){
+        this.matter.world.setBounds();
         let ground1 = this.matter.add.image(this.w*0.5, this.h, 'floor');
         ground1.setScale(10);
         ground1.setStatic(true);
@@ -79,27 +81,71 @@ class playscene extends gamescene {
     }
     level3(){
         this.matter.world.setBounds();
-        let TopGround = this.matter.add.image(this.w*0.1, this.h*0.2, 'floor');
+        let TopGround = this.matter.add.image(this.w*0.1, this.h*0.25, 'floor');
         TopGround.setScale(2).setStatic(true);
         TopGround.angle = 90;
         this.player.x = this.w*0.1;
         this.player.y = this.h*0.1;
-        
-
-        let Button = this.matter.add.image(this.w*0.55, this.h*0.7, 'floor');
-        Button.setTintFill(0xff0000).setStatic(true).setScale(2, 1.1); //(y, x)
-        Button.angle = 90;
 
         let LGround = this.matter.add.image(0, this.h, 'floor');
         LGround.setScale(30, 3).setStatic(true);
         //LGround.angle = 90;
 
-        let RGround = this.matter.add.image(this.w - 400, this.h, 'floor');
-        RGround.setScale(12, 2).setStatic(true);
+        let RGround = this.matter.add.image(this.w - 600, this.h, 'floor');
+        RGround.setScale(16.5, 2).setStatic(true);
         RGround.angle = 90;
         
+        let Button = this.matter.add.image(this.w*0.467, this.h*0.8, 'floor');
+        Button.setTintFill(0xff0000).setStatic(true).setScale(2, 1.063); //(y, x)
+        Button.angle = 90;
 
+        let f = this.add.ellipse(this.w*0.915, this.h*0.9, 300, 175, 0xffffff).setInteractive();
+        let fan = this.matter.add.gameObject(f).setStatic(true);
         
+        //ONLY STARTS IF ROBOTS OR BOXES ARE ON THE BUTTON AND WE ARE IN THE PAST
+        let wind = this.add.particles(0, 0, 'wind', {
+            scale: { start: 0.3, end: 0 },
+            x: { min: this.w*0.85, max: this.w*0.97 },
+            y: { start: this.h*0.8, end: 400, ease: 'cubic.inout' },
+            //gravityY: -100,
+            lifespan: 1000
+        });
+
+        wind.stop();
+        f.on('pointerover', ()=>{
+            wind.start(); 
+        });
+
+        f.on('pointerout', ()=>{
+            wind.stop();
+        });
+
+
+        let FGround = this.matter.add.image(this.w, this.h*0.2, 'floor');
+        FGround.setScale(1.2);
+        FGround.angle = 90;
+        FGround.setStatic(true);
+        
+        //should only move and be electrified if in the past
+       let move = this.add.tween({
+            targets: FGround,
+            x: {from: this.w*0.9, to: this.w*0.8},
+            duration: 1000,
+            yoyo: true,
+            repeat: -1,
+            ease: 'cubic.inout',
+        });
+
+        move.on('start', () => FGround.setTintFill(0xffff00));
+
+        //NEED TO FIGURE OUT A WAY FOR THE FAN TO WORK TO RAISE THE PLAYER. 
+
+        //CONTEMPLATING REPLACING THE ROBOTS WITH TWO ELECTRICAL BOXES THAT NEED TO BE MOVED ONTO THE BUTTON (WILL STILL HARM YOU IN THE PAST
+        //BECAUSE THEY ARE ELECTRIFIED IN THE PAST). WILL ASK GROUP MEMBERS ABOUT THIS.
+
+        //IN GENERAL, FIGURE OUT THE PAST & FUTURE BUSINESS, SO THAT THE OBJECTS ARE ACTIVE OR INACTIVE WHEN THEY ARE SUPPOSED TO BE
+
+    
     }  
     updates(){
     }
