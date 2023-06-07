@@ -1,6 +1,6 @@
 class gamescene extends Phaser.Scene {
     init(data){
-        this.levelnum = data.levelnum || 1;
+        this.levelnum = data.levelnum || 2;
     }
     constructor(key){
         super(key);
@@ -57,27 +57,35 @@ class gamescene extends Phaser.Scene {
             }
         });
 
-        this.matter.world.on('collisionstart', (event, bodyA, bodyB) =>{
+        this.matter.world.on('collisionactive', (event, bodyA, bodyB) =>{
                 //is touching ground
-                console.log("touching");
-                if(bodyA === this.player.body && this.unjumpable.find(element => element.body === bodyB) == undefined){
+                if(this.findunjumpable(event.pairs)){
                     this.touchingground = true;
                 }
             });
         this.matter.world.on('collisionend', (event, bodyA, bodyB) =>{
-                if(bodyA === this.player.body || bodyB === this.player.body){
+            //console.log(this.findplayer(event.pairs));
+                if(this.findplayer(event.pairs)){
                     this.touchingground = false;
                 }
             });
         this.onEnter();
-
         if(this.levelnum == 1){
+            this.updatelist = [];
+            this.unjumpable = [];
+            this.state = false;
             this.level1();
         }
         if(this.levelnum == 2){
+            this.updatelist = [];
+            this.unjumpable = [];
+            this.state = false;
             this.level2();
         }
         if(this.levelnum == 3){
+            this.updatelist = [];
+            this.unjumpable = [];
+            this.state = false;
             this.level3();
         }
     }
@@ -131,5 +139,36 @@ class gamescene extends Phaser.Scene {
         objs.map(items => {
             this.updatelist.push(items);
         })
+    }
+
+    findunjumpable(...objs){
+        let found = false;
+        //console.log((objs[0][0].bodyA == this.player.body || objs[0][0].bodyB == this.player.body));
+        objs.map(pairs => {
+            pairs.map(items => {
+                if((items.bodyA == this.player.body || items.bodyB == this.player.body) && ((this.unjumpable.find(element => element.body === items.bodyA) == undefined) && this.unjumpable.find(element => element.body === items.bodyB) == undefined)){
+                    found = true;
+                }
+            });
+
+        });
+        return found;
+    }
+    findplayer(...objs){
+        let found = false;
+        //console.log(objs[0][0] == this.player.body || objs[0][1] == this.player.body);
+        objs.map(pairs => {
+            pairs.map(items => {
+                //console.log(items.bodyA.id +", ");
+                if(items.bodyA == this.player.body || items.bodyB == this.player.body){
+                    if(found){
+                        return false;
+                        
+                    }
+                    found = true;
+                }
+            });
+        })
+        return found;
     }
 }

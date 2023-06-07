@@ -11,6 +11,7 @@ class playscene extends gamescene {
         this.load.image('firewood', 'flamingwood.png');
         this.load.image('floor', 'floor.png');
         this.load.image('flag', 'flag.png');
+        this.load.image('sand', 'sandpile.png');
     }
     onEnter(){
         
@@ -26,7 +27,7 @@ class playscene extends gamescene {
 
         this.addUpdates(wall, burningbarrel);
 
-        new flag(this, this.w*0.2, this.h*0.682, "flag", this.player, "winscene", 0);
+        new flag(this, this.w*0.2, this.h*0.682, "flag", this.player, "winscene", this.levelnum);
         
 
         let ground = this.matter.add.image(this.w*0.5, this.h, 'floor');
@@ -35,7 +36,7 @@ class playscene extends gamescene {
         ground.angle = 90;
         
         this.matter.world.on('collisionstart', (event, bodyA, bodyB) =>{
-            console.log(bodyB.velocity.y);
+            //console.log(bodyB.velocity.y);
                 if(bodyB === burningbarrel.unburnt.body && bodyA === wall.unburnt.body){
                     wall.burn();
                     if(wall.fire == null){
@@ -47,6 +48,59 @@ class playscene extends gamescene {
             });
     }
 
+    level2(){
+        let ground1 = this.matter.add.image(this.w*0.5, this.h, 'floor');
+        ground1.setScale(10);
+        ground1.setStatic(true);
+        ground1.angle = 90;
+
+        let ground2 = this.matter.add.image(this.w*0.2, this.h*0.3, 'floor');
+        ground2.setScale(3);
+        ground2.setStatic(true);
+        ground2.angle = 90;
+        ground2.setScale(3);
+
+        let ground3 = this.matter.add.image(this.w*0.8, this.h*0.3, 'floor');
+        ground3.setScale(3);
+        ground3.setStatic(true);
+        ground3.angle = 90;
+
+        new nonobox(this, ground3.x-410, ground3.y, 0.8, 0.53, ground3);
+        new nonobox(this, ground2.x+410, ground3.y, 0.8, 0.53, ground2);
+
+        let hourglass = new swappingsand(this, this.w*0.5, this.h*0.5, "sand");
+        //console.log(hourglass.bottomsand.body.id);
+        //console.log(hourglass.topsand);
+
+        new flag(this, this.w*0.2, this.h*0.682, "flag", this.player, "winscene", this.levelnum);
+
+        this.addUpdates(hourglass);
+        
+    }
+    level3(){
+        this.matter.world.setBounds();
+        let TopGround = this.matter.add.image(this.w*0.1, this.h*0.2, 'floor');
+        TopGround.setScale(2).setStatic(true);
+        TopGround.angle = 90;
+        this.player.x = this.w*0.1;
+        this.player.y = this.h*0.1;
+        
+
+        let Button = this.matter.add.image(this.w*0.55, this.h*0.7, 'floor');
+        Button.setTintFill(0xff0000).setStatic(true).setScale(2, 1.1); //(y, x)
+        Button.angle = 90;
+
+        let LGround = this.matter.add.image(0, this.h, 'floor');
+        LGround.setScale(30, 3).setStatic(true);
+        //LGround.angle = 90;
+
+        let RGround = this.matter.add.image(this.w - 400, this.h, 'floor');
+        RGround.setScale(12, 2).setStatic(true);
+        RGround.angle = 90;
+        
+
+        
+    }  
     updates(){
     }
 }
@@ -66,6 +120,15 @@ class flag{
                 });
             }
         });
+
+    }
+}
+class nonobox {
+    constructor(scene, x, y, width, height, box){
+        this.nono = scene.matter.add.image(x, y, box.texture);
+        this.nono.setScale(width, height);
+        scene.makeUnjumpapable(this.nono);
+        this.nono.setStatic(true);
     }
 }
 class wood {
@@ -96,7 +159,7 @@ class wood {
             if(this.fire!=null){
                 this.fire.y = 3000;
             }
-            console.log(this.unburnt.y);
+            //console.log(this.unburnt.y);
         }
         if(!state && this.onfire){  
             this.unburnt.setStatic(this.floppy);
@@ -113,7 +176,41 @@ class wood {
     }
 }
 
+class swappingsand {
+    constructor(scene, x, y, sand){
+        this.offset = 190;
+        this.y = y;
+        this.topsand = scene.matter.add.image(x, y -this.offset, sand);
+        this.bottomsand = scene.matter.add.image(x, y +this.offset, sand);
+        this.topsand.setScale(0.63);
+        this.bottomsand.setScale(0.63);
+        this.topsand.setTrapezoid(this.topsand.width*0.63,-this.topsand.height*0.63,1);
+        this.bottomsand.setTrapezoid(this.topsand.width*0.63, -this.topsand.height*0.63,1);
+        this.bottomsand.angle = 180;
+        this.topsand.setStatic(true);
+        this.bottomsand.setStatic(true);
+        
+
+        this.bottomsand.y = 3000;
+        
+    }
+    futureswap(state){
+        if(state){
+            this.topsand.y = 3000;
+            this.bottomsand.y = this.y +this.offset;
+        }
+        else{
+            this.bottomsand.y = 3000;
+            this.topsand.y = this.y -this.offset;
+        }
+    }
+
+}
 class winscene extends Phaser.Scene{
+    init(data){
+        this.levelnum = data.levelnum || 1;
+    }
+
     constructor(){
         super("winscene");
     }
@@ -123,6 +220,14 @@ class winscene extends Phaser.Scene{
         let wintext = this.add.text(w*0.5, h*0.5, "YOU WON!");
         wintext.setOrigin(0.5, 0.5);
         wintext.setScale(4);
+
+        let transitionDuration = 1000;
+        this.input.on("pointerdown", () =>{
+            this.cameras.main.fade(transitionDuration, 0, 0, 0);
+            this.time.delayedCall(transitionDuration, () => {
+                this.scene.start("playscene", {levelnum: this.levelnum+1});
+            });
+        });
     }
 
 }
@@ -233,7 +338,7 @@ const config = {
     physics: {
         default: 'matter',
         matter: {
-            //debug:true,
+            debug:true,
         }
     },
     backgroundColor: 0xbbbbbb,

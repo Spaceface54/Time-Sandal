@@ -171,10 +171,10 @@ class title extends Phaser.Scene {
         // });
 
         let leftEmitter = this.add.particles(0, 0, 'sand', {
-            scale: 0.3,
+            scale: 0.1,
             lifespan: 6000,
             gravityX: 150,
-            frequency: 60,
+            frequency: 5,
             maxVelocityX: 400,
             maxVelocityY: 200,
             blendMode: 'ADD',
@@ -182,10 +182,10 @@ class title extends Phaser.Scene {
         });
 
         let rightEmitter = this.add.particles(0, 0, 'sand', {
-            scale: 0.3,
+            scale: 0.1,
             lifespan: 6000,
             gravityX: -150,
-            frequency: 60,
+            frequency: 5,
             maxVelocityX: 400,
             maxVelocityY: 200,
             blendMode: 'ADD',
