@@ -152,6 +152,13 @@ class playscene extends gamescene {
     }  
     updates(){
     }
+    
+    floorplacer(x, y, width){
+        let dist = 0;
+        for(let i = 0; i < width; i = i+dist){
+            
+        }
+    }
 }
 
 class flag{
