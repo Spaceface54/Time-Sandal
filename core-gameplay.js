@@ -13,6 +13,7 @@ class playscene extends gamescene {
         this.load.image('flag', 'flag.png');
         this.load.image('sand', 'sandpile.png');
         this.load.image('wind', 'wind.png');
+        this.load.image('flooredit','FloorTileEdit.png');
     }
     onEnter(){
         
@@ -30,6 +31,9 @@ class playscene extends gamescene {
 
         new flag(this, this.w*0.2, this.h*0.682, "flag", this.player, "winscene", this.levelnum);
         
+        let ground2 = this.matter.add.image(this.w*0.5, this.h-500, 'flooredit');
+        ground2.setScale(10);
+        ground2.setStatic(true);
 
         let ground = this.matter.add.image(this.w*0.5, this.h, 'floor');
         ground.setScale(10);
