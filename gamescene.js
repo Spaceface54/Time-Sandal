@@ -1,6 +1,6 @@
 class gamescene extends Phaser.Scene {
     init(data){
-        this.levelnum = data.levelnum || 3;
+        this.levelnum = data.levelnum || 1;
     }
     constructor(key){
         super(key);
@@ -29,6 +29,7 @@ class gamescene extends Phaser.Scene {
         this.player.setScale(0.3);
         this.player.setBounce(0.2);
         this.player.body.inertia = Infinity;
+        this.matter.world.setBounds();
 
         let switching = false;
         this.input.on("pointerdown", (pointer) =>{
