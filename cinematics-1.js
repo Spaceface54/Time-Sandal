@@ -98,10 +98,13 @@ class title extends Phaser.Scene {
         this.load.image('title2', 'Title 2.png');
         this.load.image('title3', 'Title 3.png');
         this.load.image('title4', 'Title 4.png');
+        this.load.audio('title_song', 'Potential_title_song.mp3');
     }
 
     create() {
         this.cameras.main.fadeIn(1000, 0, 0, 0);
+        let t = this.sound.add('title_song', {loop: true, volume: 0.35});
+        t.play(); 
         this.add.text(500, 500, "Title Screen")
             .setColor(0xffffff);
         let title1 = this.add.image(520, 180, 'title1')
@@ -125,6 +128,7 @@ class title extends Phaser.Scene {
                 start.setScale(1.5);
             })
             .on('pointerdown', () => {
+                t.stop();
                 this.cameras.main.fade(1000, 0, 0, 0);
                 this.time.delayedCall(1000, () => {
                     this.scene.start('intro');
