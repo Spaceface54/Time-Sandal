@@ -28,13 +28,17 @@ class logo extends Phaser.Scene {
             ease: 'circ.in'
         });
 
-        this.tweens.add({
-            targets: flop,
-            x: 770,
-            scale: 1,
-            duration: 1000,
-            ease: 'circ.in'
-        });
+        const chain = this.tweens.chain({
+            tweens: [
+                {
+                    targets: flop,
+                    x: 770,
+                    scale: 1,
+                    duration: 1000,
+                    ease: 'circ.in'
+                }
+            ]
+        })
 
         this.time.delayedCall(1100, () => {
             game.setVisible(false);
@@ -269,7 +273,7 @@ const config = {
     width: 1040,
     height: 612,
     backgroundColor: 0xbbbbbb,
-    scene: [logo,title]
+    scene: [logo, title]
     //scene: [title]
 };
 const game = new Phaser.Game(config);
