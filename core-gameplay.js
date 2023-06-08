@@ -32,7 +32,7 @@ class playscene extends gamescene {
         new flag(this, this.w*0.2, this.h*0.682, "flag", this.player, "winscene", this.levelnum);
         
         let ground2 = this.matter.add.image(this.w*0.5, this.h-500, 'flooredit');
-        ground2.setScale(10);
+        ground2.setScale(1);
         ground2.setStatic(true);
 
         let ground = this.matter.add.image(this.w*0.5, this.h, 'floor');
