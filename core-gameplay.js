@@ -13,6 +13,7 @@ class playscene extends gamescene {
         this.load.image('flag', 'flag.png');
         this.load.image('sand', 'sandpile.png');
         this.load.image('wind', 'wind.png');
+        this.load.image('flooredit','FloorTileEdit.png');
     }
     onEnter(){
         
@@ -30,6 +31,9 @@ class playscene extends gamescene {
 
         new flag(this, this.w*0.2, this.h*0.682, "flag", this.player, "winscene", this.levelnum);
         
+        let ground2 = this.matter.add.image(this.w*0.5, this.h-500, 'flooredit');
+        ground2.setScale(10);
+        ground2.setStatic(true);
 
         let ground = this.matter.add.image(this.w*0.5, this.h, 'floor');
         ground.setScale(10);
@@ -67,8 +71,8 @@ class playscene extends gamescene {
         ground3.setStatic(true);
         ground3.angle = 90;
 
-        new nonobox(this, ground3.x-410, ground3.y, 0.8, 0.53, ground3);
-        new nonobox(this, ground2.x+410, ground3.y, 0.8, 0.53, ground2);
+        new nonobox(this, ground3.x-405, ground3.y, 0.8, 0.53, ground3);
+        new nonobox(this, ground2.x+405, ground3.y, 0.8, 0.53, ground2);
 
         let hourglass = new swappingsand(this, this.w*0.5, this.h*0.5, "sand");
         //console.log(hourglass.bottomsand.body.id);
@@ -80,7 +84,6 @@ class playscene extends gamescene {
         
     }
     level3(){
-        this.matter.world.setBounds();
         let TopGround = this.matter.add.image(this.w*0.1, this.h*0.25, 'floor');
         TopGround.setScale(2).setStatic(true);
         TopGround.angle = 90;
@@ -175,6 +178,7 @@ class nonobox {
         this.nono.setScale(width, height);
         scene.makeUnjumpapable(this.nono);
         this.nono.setStatic(true);
+        this.nono.alpha = 0;
     }
 }
 class wood {
