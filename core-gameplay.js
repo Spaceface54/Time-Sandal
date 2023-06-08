@@ -13,7 +13,7 @@ class playscene extends gamescene {
         this.load.image('flag', 'flag.png');
         this.load.image('sand', 'sandpile.png');
         this.load.image('wind', 'wind.png');
-        this.load.image('flooredit','FloorTileEdit.png');
+        this.load.image('flooredit','Floor Box.png');
     }
     onEnter(){
         
