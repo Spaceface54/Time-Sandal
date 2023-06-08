@@ -30,15 +30,8 @@ class playscene extends gamescene {
         this.addUpdates(wall, burningbarrel);
 
         new flag(this, this.w*0.2, this.h*0.682, "flag", this.player, "winscene", this.levelnum);
-        
-        let ground2 = this.matter.add.image(this.w*0.5, this.h-500, 'flooredit');
-        ground2.setScale(1);
-        ground2.setStatic(true);
 
-        let ground = this.matter.add.image(this.w*0.5, this.h, 'floor');
-        ground.setScale(10);
-        ground.setStatic(true);
-        ground.angle = 90;
+        this.floorplacer(this.w*0.5, this.h*0.91, this.w, "flooredit");
         
         this.matter.world.on('collisionstart', (event, bodyA, bodyB) =>{
             //console.log(bodyB.velocity.y);
@@ -54,11 +47,7 @@ class playscene extends gamescene {
     }
 
     level2(){
-        this.matter.world.setBounds();
-        let ground1 = this.matter.add.image(this.w*0.5, this.h, 'floor');
-        ground1.setScale(10);
-        ground1.setStatic(true);
-        ground1.angle = 90;
+        this.floorplacer(this.w*0.5, this.h*0.91, this.w, "flooredit");
 
         let ground2 = this.matter.add.image(this.w*0.2, this.h*0.3, 'floor');
         ground2.setScale(3);
@@ -142,6 +131,16 @@ class playscene extends gamescene {
         move.on('start', () => FGround.setTintFill(0xffff00));
 
         //NEED TO FIGURE OUT A WAY FOR THE FAN TO WORK TO RAISE THE PLAYER. 
+        this.matter.world.on('oncollision', (event, bodyA, bodyB) =>{
+            //console.log(bodyB.velocity.y);
+                if(bodyB === this.player && bodyA === fan){
+                    console.log('fan hit');
+                    wind.start();
+                    bodyB.SetVelocityY(-225);
+                }else{
+                    wind.stop();
+                }
+        });
 
         //CONTEMPLATING REPLACING THE ROBOTS WITH TWO ELECTRICAL BOXES THAT NEED TO BE MOVED ONTO THE BUTTON (WILL STILL HARM YOU IN THE PAST
         //BECAUSE THEY ARE ELECTRIFIED IN THE PAST). WILL ASK GROUP MEMBERS ABOUT THIS.
@@ -153,10 +152,15 @@ class playscene extends gamescene {
     updates(){
     }
     
-    floorplacer(x, y, width){
-        let dist = 0;
-        for(let i = 0; i < width; i = i+dist){
-            
+    floorplacer(x, y, width, texture){
+        let temp = this.matter.add.image(x, y, texture);
+        let dist = temp.width-5;
+        temp.setStatic(true);
+        for(let i = dist; i < width; i = i+dist){
+            temp = this.matter.add.image(x+i, y, texture);
+            temp.setStatic(true);
+            temp = this.matter.add.image(x-i, y, texture);
+            temp.setStatic(true);
         }
     }
 }
@@ -213,6 +217,7 @@ class wood {
             this.ash.x = this.unburnt.x;
             this.ash.y = this.unburnt.y;
             this.unburnt.y = 3000;
+            this.unburnt.setAngularVelocity(0,0);
             if(this.fire!=null){
                 this.fire.y = 3000;
             }
@@ -221,6 +226,7 @@ class wood {
         if(!state && this.onfire){  
             this.unburnt.setStatic(this.floppy);
             this.unburnt.setOrigin(0.5, 1);
+            this.unburnt.setVelocity(0, 0);
             this.unburnt.x = this.ash.x;
             this.unburnt.y = this.ash.y;
             this.unburnt.setOrigin(0.5, 0.5);
@@ -229,6 +235,7 @@ class wood {
                 this.fire.x = this.unburnt.x;
             }
             this.ash.y = 3000;
+            this.ash.setAngularVelocity(0,0);
         }
     }
 }

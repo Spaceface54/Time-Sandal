@@ -17,12 +17,17 @@ class gamescene extends Phaser.Scene {
         this.load.path ="./assets/";
         this.load.image('guy', 'guy.png');
         this.load.image('forwardback', 'forwardback.png');
+        this.load.audio("loop", "loopingsoundt.mp3");
         this.images();
     }
     images(){
         console.log("has not implimented images");
     }
     create(){
+        let looping = this.sound.add("loop");
+        looping.play();
+        looping.loop = true;
+        looping.volume = 0.45;
         this.w = this.game.config.width;
         this.h = this.game.config.height;
         this.player = this.matter.add.image(this.w*0.8, this.h*0.7, 'guy');
