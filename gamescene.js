@@ -1,6 +1,6 @@
 class gamescene extends Phaser.Scene {
     init(data){
-        this.levelnum = data.levelnum || 3;
+        this.levelnum = data.levelnum || 1;
     }
     constructor(key){
         super(key);
@@ -12,6 +12,7 @@ class gamescene extends Phaser.Scene {
         this.playerspeed = 7;
         this.touchingground = false; //for jumping
         this.unjumpable = [] //list of things that can't be jumped on
+        this.borderwalls;
     }
     preload(){
         this.load.path ="./assets/";
@@ -30,11 +31,11 @@ class gamescene extends Phaser.Scene {
         looping.volume = 0.45;
         this.w = this.game.config.width;
         this.h = this.game.config.height;
+        this.borderwalls = this.matter.world.setBounds().getAllBodies();
         this.player = this.matter.add.image(this.w*0.8, this.h*0.7, 'guy');
         this.player.setScale(0.3);
         this.player.setBounce(0.2);
         this.player.body.inertia = Infinity;
-        this.matter.world.setBounds();
 
         let switching = false;
         this.input.on("pointerdown", (pointer) =>{
@@ -81,6 +82,9 @@ class gamescene extends Phaser.Scene {
             this.unjumpable = [];
             this.state = false;
             this.level1();
+            this.borderwalls.map( items => {
+                console.log(items.id);
+            });
         }
         if(this.levelnum == 2){
             this.updatelist = [];
@@ -152,7 +156,7 @@ class gamescene extends Phaser.Scene {
         //console.log((objs[0][0].bodyA == this.player.body || objs[0][0].bodyB == this.player.body));
         objs.map(pairs => {
             pairs.map(items => {
-                if((items.bodyA == this.player.body || items.bodyB == this.player.body) && ((this.unjumpable.find(element => element.body === items.bodyA) == undefined) && this.unjumpable.find(element => element.body === items.bodyB) == undefined)){
+                if((items.bodyA == this.player.body || items.bodyB == this.player.body) && ((this.unjumpable.find(element => element.body === items.bodyA) == undefined) && this.unjumpable.find(element => element.body === items.bodyB) == undefined) && ((this.borderwalls.find(element => element === items.bodyA) == undefined) && this.borderwalls.find(element => element === items.bodyB) == undefined)){
                     found = true;
                 }
             });
@@ -165,7 +169,7 @@ class gamescene extends Phaser.Scene {
         //console.log(objs[0][0] == this.player.body || objs[0][1] == this.player.body);
         objs.map(pairs => {
             pairs.map(items => {
-                //console.log(items.bodyA.id +", ");
+                console.log(items.bodyB.id +", ");
                 if(items.bodyA == this.player.body || items.bodyB == this.player.body){
                     if(found){
                         return false;

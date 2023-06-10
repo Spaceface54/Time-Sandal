@@ -14,6 +14,8 @@ class playscene extends gamescene {
         this.load.image('sand', 'sandpile.png');
         this.load.image('wind', 'wind.png');
         this.load.image('flooredit','Floor Box.png');
+        this.load.image('box_on', 'BoxOn.png');
+        this.load.image('box_off', 'BoxOff.png');
     }
     onEnter(){
         
@@ -28,6 +30,8 @@ class playscene extends gamescene {
         burningbarrel.burn();
 
         this.addUpdates(wall, burningbarrel);
+
+        //console.log(this.unjumpable[2].id);
 
         new flag(this, this.w*0.2, this.h*0.682, "flag", this.player, "winscene", this.levelnum);
 
@@ -103,23 +107,18 @@ class playscene extends gamescene {
             lifespan: 1000
         });
 
-        this.wind.stop();
-        f.on('pointerover', ()=>{
-            this.wind.start(); 
-        });
 
-        f.on('pointerout', ()=>{
-            this.wind.stop();
-        });
+        let b1 = this.add.sprite(1300, this.h*0.6, 'box_on');
+        this.box1 = this.matter.add.gameObject(b1);
 
 
-        let b1 = this.add.rectangle(100, this.h*0.6, 75, 90, 0xff00ff).setInteractive();
-        //b1.preFX.addGlow();
-        this.bot1 = this.matter.add.gameObject(b1);
+        let b2 = this.add.sprite(400, this.h*0.6, 'box_on');
+        this.box2 = this.matter.add.gameObject(b2);
+
+        let b3 = this.add.sprite(900, this.h*0.6, 'box_on');
+        this.box3 = this.matter.add.gameObject(b3);
 
 
-        let b2 = this.add.rectangle(this.w*0.15, this.h*0.6, 75, 90, 0xff00ff);
-        this.bot2 = this.matter.add.gameObject(b2);
 
 
         this.FGround = this.matter.add.image(this.w, this.h*0.2, 'floor');
@@ -162,11 +161,14 @@ class playscene extends gamescene {
             //keep updating the flag's position
             this.l3_flag.flagimg.x = this.FGround.x;
             this.l3_flag.flagimg.y = this.FGround.y-115; 
+
+            this.keyboard.inpi
         }
     }
     
     floorplacer(x, y, width, texture){
         let temp = this.matter.add.image(x, y, texture);
+        temp.setDepth(4);
         let dist = temp.width-5;
         temp.setStatic(true);
         for(let i = dist; i < width; i = i+dist){
@@ -174,9 +176,23 @@ class playscene extends gamescene {
             temp.setStatic(true);
             temp = this.matter.add.image(x-i, y, texture);
             temp.setStatic(true);
+            temp.setDepth(4);
         }
     }
 }
+
+class l3{
+    constructor(scene, x, y, box_on, box_off){
+        this.box1 = this.matter.add.image(1300, this.h*0.6, box_on);
+        this.box2 = this.matter.add.image(400, this.h*0.6, box_on);
+        this.box3 = this.matter.add.image(900, this.h*0.6, box_on);
+    }
+
+    futureswap(state){
+        
+    }
+}
+
 
 class flag{
     constructor(scene, x, y, img, player, key, levelnum){
@@ -216,7 +232,7 @@ class wood {
         this.ash = scene.matter.add.image(x, y, 'ash');
         this.ash.setFriction(0.05);
         this.ash.setFrictionAir(0.0005);
-        this.ash.setBounce(0.9);
+        this.ash.setBounce(0);
         this.ash.y = 3000;
         this.fire = null;
     }
@@ -241,7 +257,7 @@ class wood {
             this.unburnt.setOrigin(0.5, 1);
             this.unburnt.setVelocity(0, 0);
             this.unburnt.x = this.ash.x;
-            this.unburnt.y = this.ash.y;
+            this.unburnt.y = this.ash.y-100;
             this.unburnt.setOrigin(0.5, 0.5);
             if(this.fire!=null){
                 this.fire.y = this.unburnt.y;
