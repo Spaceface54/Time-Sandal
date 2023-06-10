@@ -14,6 +14,8 @@ class playscene extends gamescene {
         this.load.image('sand', 'sandpile.png');
         this.load.image('wind', 'wind.png');
         this.load.image('flooredit','Floor Box.png');
+        this.load.image('box_on', 'BoxOn.png');
+        this.load.image('box_off', 'BoxOff.png');
     }
     onEnter(){
         
@@ -103,23 +105,18 @@ class playscene extends gamescene {
             lifespan: 1000
         });
 
-        this.wind.stop();
-        f.on('pointerover', ()=>{
-            this.wind.start(); 
-        });
 
-        f.on('pointerout', ()=>{
-            this.wind.stop();
-        });
+        let b1 = this.add.sprite(1300, this.h*0.6, 'box_on');
+        this.box1 = this.matter.add.gameObject(b1);
 
 
-        let b1 = this.add.rectangle(100, this.h*0.6, 75, 90, 0xff00ff).setInteractive();
-        //b1.preFX.addGlow();
-        this.bot1 = this.matter.add.gameObject(b1);
+        let b2 = this.add.sprite(400, this.h*0.6, 'box_on');
+        this.box2 = this.matter.add.gameObject(b2);
+
+        let b3 = this.add.sprite(900, this.h*0.6, 'box_on');
+        this.box3 = this.matter.add.gameObject(b3);
 
 
-        let b2 = this.add.rectangle(this.w*0.15, this.h*0.6, 75, 90, 0xff00ff);
-        this.bot2 = this.matter.add.gameObject(b2);
 
 
         this.FGround = this.matter.add.image(this.w, this.h*0.2, 'floor');
@@ -177,6 +174,7 @@ class playscene extends gamescene {
         }
     }
 }
+
 
 class flag{
     constructor(scene, x, y, img, player, key, levelnum){
