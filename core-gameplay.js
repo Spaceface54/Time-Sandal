@@ -112,6 +112,7 @@ class playscene extends gamescene {
         RGround.setScale(16.5, 2).setStatic(true);
         RGround.angle = 90;
         
+        //USE THE BUTTON SPRITE INSTEAD
         let Button = this.matter.add.image(this.w*0.467, this.h*0.8, 'floor');
         Button.setTintFill(0xff0000).setStatic(true).setScale(2, 1.063); //(y, x)
         Button.angle = 90;
