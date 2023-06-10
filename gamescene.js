@@ -1,8 +1,8 @@
 class gamescene extends Phaser.Scene {
-    init(data){
-        this.levelnum = data.levelnum || 1;
+    init(data) {
+        this.levelnum = data.levelnum || 3;
     }
-    constructor(key){
+    constructor(key) {
         super(key);
         this.player;
         this.w;
@@ -14,43 +14,40 @@ class gamescene extends Phaser.Scene {
         this.unjumpable = [] //list of things that can't be jumped on
         this.borderwalls;
     }
-    preload(){
-        this.load.path ="./assets/";
+    preload() {
+        this.load.path = "./assets/";
         this.load.image('guy', 'guy.png');
         this.load.image('forwardback', 'forwardback.png');
         this.load.audio("loop", "loopingsoundt.mp3");
+       this.load.image("backTile", "Background.png");
         this.images();
     }
-    images(){
+    images() {
         console.log("has not implimented images");
     }
-    create(){
-        let looping = this.sound.add("loop");
-        looping.play();
-        looping.loop = true;
-        looping.volume = 0.45;
+    create() {
         this.w = this.game.config.width;
         this.h = this.game.config.height;
         this.borderwalls = this.matter.world.setBounds().getAllBodies();
-        this.player = this.matter.add.image(this.w*0.8, this.h*0.7, 'guy');
+        this.player = this.matter.add.image(this.w * 0.8, this.h * 0.7, 'guy');
         this.player.setScale(0.3);
         this.player.setBounce(0.2);
         this.player.body.inertia = Infinity;
 
         let switching = false;
-        this.input.on("pointerdown", (pointer) =>{
-            if(pointer.y < this.h*0.5 && this.touchingground){ //&& this.player.body.touching.down){
-                this.player.setVelocityY(-10,0);
+        this.input.on("pointerdown", (pointer) => {
+            if (pointer.y < this.h * 0.5 && this.touchingground) { //&& this.player.body.touching.down){
+                this.player.setVelocityY(-10, 0);
             }
-            else if(pointer.y > this.h*0.5 && !switching){
+            else if (pointer.y > this.h * 0.5 && !switching) {
                 switching = true;
                 this.state = !this.state;
-                let tempimg = this.add.image(this.w*0.5, this.h*0.3, "forwardback");
-                if(!this.state){
+                let tempimg = this.add.image(this.w * 0.5, this.h * 0.3, "forwardback");
+                if (!this.state) {
                     tempimg.angle = 180;
                 }
                 this.tweens.add({
-                    targets:tempimg,
+                    targets: tempimg,
                     alpha: 0,
                     duration: 200,
                     onComplete: () => {
@@ -64,35 +61,36 @@ class gamescene extends Phaser.Scene {
             }
         });
 
-        this.matter.world.on('collisionactive', (event, bodyA, bodyB) =>{
-                //is touching ground
-                if(this.findunjumpable(event.pairs)){
-                    this.touchingground = true;
-                }
-            });
-        this.matter.world.on('collisionend', (event, bodyA, bodyB) =>{
+        this.matter.world.on('collisionactive', (event, bodyA, bodyB) => {
+            //is touching ground
+            if (this.findunjumpable(event.pairs)) {
+                this.touchingground = true;
+            }
+        });
+        this.matter.world.on('collisionend', (event, bodyA, bodyB) => {
             //console.log(this.findplayer(event.pairs));
-                if(this.findplayer(event.pairs)){
-                    this.touchingground = false;
-                }
-            });
+            if (this.findplayer(event.pairs)) {
+                this.touchingground = false;
+            }
+        });
         this.onEnter();
-        if(this.levelnum == 1){
+        if (this.levelnum == 1) {
+            let looping = this.sound.add("loop");
+            looping.play();
+            looping.loop = true;
+            looping.volume = 0.45;
             this.updatelist = [];
             this.unjumpable = [];
             this.state = false;
             this.level1();
-            this.borderwalls.map( items => {
-                console.log(items.id);
-            });
         }
-        if(this.levelnum == 2){
+        if (this.levelnum == 2) {
             this.updatelist = [];
             this.unjumpable = [];
             this.state = false;
             this.level2();
         }
-        if(this.levelnum == 3){
+        if (this.levelnum == 3) {
             this.updatelist = [];
             this.unjumpable = [];
             this.state = false;
@@ -100,63 +98,60 @@ class gamescene extends Phaser.Scene {
         }
     }
 
-    update(){
+    update() {
         this.player.setAngularVelocity(0);
-        let {x,y,isDown} = this.input.activePointer;
-        if (x<this.w*0.4)
-        {
+        let { x, y, isDown } = this.input.activePointer;
+        if (x < this.w * 0.4) {
             this.player.setVelocityX(-this.playerspeed, 0);
 
         }
-        else if (x>this.w*0.6)
-        {
-            this.player.setVelocityX(this.playerspeed, 0 );
+        else if (x > this.w * 0.6) {
+            this.player.setVelocityX(this.playerspeed, 0);
 
         }
-        else
-        {
+        else {
             this.player.setVelocityX(0);
         }
 
         this.updates();
     }
 
-    updates(){
+    updates() {
 
     }
 
 
-    onEnter(){
+    onEnter() {
         console.log("has not implimented on enter");
     }
-    level1(){
+    level1() {
         console.log("has not implimented level1");
     }
-    level2(){
+    level2() {
         console.log("has not implimented level2");
-    }  
-    level3(){
+    }
+    level3() {
         console.log("has not implimented level3");
     }
 
-    makeUnjumpapable(...objs){
+    makeUnjumpapable(...objs) {
         objs.map(items => {
             this.unjumpable.push(items);
         })
     };
-    
-    addUpdates(...objs){
+
+    addUpdates(...objs) {
         objs.map(items => {
             this.updatelist.push(items);
         })
     }
 
-    findunjumpable(...objs){
+    findunjumpable(...objs) {
         let found = false;
         //console.log((objs[0][0].bodyA == this.player.body || objs[0][0].bodyB == this.player.body));
         objs.map(pairs => {
             pairs.map(items => {
-                if((items.bodyA == this.player.body || items.bodyB == this.player.body) && ((this.unjumpable.find(element => element.body === items.bodyA) == undefined) && this.unjumpable.find(element => element.body === items.bodyB) == undefined) && ((this.borderwalls.find(element => element === items.bodyA) == undefined) && this.borderwalls.find(element => element === items.bodyB) == undefined)){
+                if ((items.bodyA == this.player.body || items.bodyB == this.player.body) && ((this.unjumpable.find(element => element.body === items.bodyA) == undefined) && this.unjumpable.find(element => element.body === items.bodyB) == undefined) && ((this.borderwalls.find(element => element === items.bodyA) == undefined) && this.borderwalls.find(element => element === items.bodyB) == undefined)) {
                     found = true;
                 }
             });
@@ -164,16 +159,16 @@ class gamescene extends Phaser.Scene {
         });
         return found;
     }
-    findplayer(...objs){
+    findplayer(...objs) {
         let found = false;
         //console.log(objs[0][0] == this.player.body || objs[0][1] == this.player.body);
         objs.map(pairs => {
             pairs.map(items => {
-                console.log(items.bodyB.id +", ");
-                if(items.bodyA == this.player.body || items.bodyB == this.player.body){
-                    if(found){
+                //console.log(items.bodyB.id + ", ");
+                if (items.bodyA == this.player.body || items.bodyB == this.player.body) {
+                    if (found) {
                         return false;
-                        
+
                     }
                     found = true;
                 }
@@ -181,4 +176,6 @@ class gamescene extends Phaser.Scene {
         })
         return found;
     }
+
+   
 }
