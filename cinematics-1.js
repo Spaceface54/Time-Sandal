@@ -28,13 +28,17 @@ class logo extends Phaser.Scene {
             ease: 'circ.in'
         });
 
-        this.tweens.add({
-            targets: flop,
-            x: 770,
-            scale: 1,
-            duration: 1000,
-            ease: 'circ.in'
-        });
+        const chain = this.tweens.chain({
+            tweens: [
+                {
+                    targets: flop,
+                    x: 770,
+                    scale: 1,
+                    duration: 1000,
+                    ease: 'circ.in'
+                }
+            ]
+        })
 
         this.time.delayedCall(1100, () => {
             game.setVisible(false);
@@ -94,10 +98,13 @@ class title extends Phaser.Scene {
         this.load.image('title2', 'Title 2.png');
         this.load.image('title3', 'Title 3.png');
         this.load.image('title4', 'Title 4.png');
+        this.load.audio('title_song', 'Potential_title_song.mp3');
     }
 
     create() {
         this.cameras.main.fadeIn(1000, 0, 0, 0);
+        let t = this.sound.add('title_song', {loop: true, volume: 0.35});
+        t.play(); 
         this.add.text(500, 500, "Title Screen")
             .setColor(0xffffff);
         let title1 = this.add.image(520, 180, 'title1')
@@ -121,6 +128,7 @@ class title extends Phaser.Scene {
                 start.setScale(1.5);
             })
             .on('pointerdown', () => {
+                t.stop();
                 this.cameras.main.fade(1000, 0, 0, 0);
                 this.time.delayedCall(1000, () => {
                     this.scene.start('intro');
@@ -171,10 +179,11 @@ class title extends Phaser.Scene {
         // });
 
         let leftEmitter = this.add.particles(0, 0, 'sand', {
-            scale: 0.1,
-            lifespan: 6000,
+            scale: 0.3,
+             lifespan: 6000,
             gravityX: 150,
-            frequency: 5,
+            frequency: 3,
+            rotate: Phaser.Math.Between(-180,180),
             maxVelocityX: 400,
             maxVelocityY: 200,
             blendMode: 'ADD',
@@ -182,10 +191,11 @@ class title extends Phaser.Scene {
         });
 
         let rightEmitter = this.add.particles(0, 0, 'sand', {
-            scale: 0.1,
+            scale: 0.3,
             lifespan: 6000,
             gravityX: -150,
-            frequency: 5,
+            frequency: 3,
+            rotate: Phaser.Math.Between(-180,180),
             maxVelocityX: 400,
             maxVelocityY: 200,
             blendMode: 'ADD',
@@ -269,7 +279,7 @@ const config = {
     width: 1040,
     height: 612,
     backgroundColor: 0xbbbbbb,
-    scene: [logo,title]
-    //scene: [title]
+    //scene: [logo, title]
+    scene: [title]
 };
 const game = new Phaser.Game(config);

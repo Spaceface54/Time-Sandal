@@ -30,15 +30,8 @@ class playscene extends gamescene {
         this.addUpdates(wall, burningbarrel);
 
         new flag(this, this.w*0.2, this.h*0.682, "flag", this.player, "winscene", this.levelnum);
-        
-        let ground2 = this.matter.add.image(this.w*0.5, this.h-500, 'flooredit');
-        ground2.setScale(1);
-        ground2.setStatic(true);
 
-        let ground = this.matter.add.image(this.w*0.5, this.h, 'floor');
-        ground.setScale(10);
-        ground.setStatic(true);
-        ground.angle = 90;
+        this.floorplacer(this.w*0.5, this.h*0.91, this.w, "flooredit");
         
         this.matter.world.on('collisionstart', (event, bodyA, bodyB) =>{
             //console.log(bodyB.velocity.y);
@@ -54,11 +47,7 @@ class playscene extends gamescene {
     }
 
     level2(){
-        this.matter.world.setBounds();
-        let ground1 = this.matter.add.image(this.w*0.5, this.h, 'floor');
-        ground1.setScale(10);
-        ground1.setStatic(true);
-        ground1.angle = 90;
+        this.floorplacer(this.w*0.5, this.h*0.91, this.w, "flooredit");
 
         let ground2 = this.matter.add.image(this.w*0.2, this.h*0.3, 'floor');
         ground2.setScale(3);
@@ -106,32 +95,32 @@ class playscene extends gamescene {
         let fan = this.matter.add.gameObject(f).setStatic(true);
         
         //ONLY STARTS IF ROBOTS OR BOXES ARE ON THE BUTTON AND WE ARE IN THE PAST
-        let wind = this.add.particles(0, 0, 'wind', {
+        this.wind = this.add.particles(0, 0, 'wind', {
             scale: { start: 0.3, end: 0 },
             x: { min: this.w*0.85, max: this.w*0.97 },
-            y: { start: this.h*0.8, end: 400, ease: 'cubic.inout' },
+            y: { start: this.h*0.8, end: 400, ease: 'linear' },
             //gravityY: -100,
             lifespan: 1000
         });
 
-        wind.stop();
+        this.wind.stop();
         f.on('pointerover', ()=>{
-            wind.start(); 
+            this.wind.start(); 
         });
 
         f.on('pointerout', ()=>{
-            wind.stop();
+            this.wind.stop();
         });
 
 
-        let FGround = this.matter.add.image(this.w, this.h*0.2, 'floor');
-        FGround.setScale(1.2);
-        FGround.angle = 90;
-        FGround.setStatic(true);
+        this.FGround = this.matter.add.image(this.w, this.h*0.2, 'floor');
+        this.FGround.setScale(1.2);
+        this.FGround.angle = 90;
+        this.FGround.setStatic(true);
         
         //should only move and be electrified if in the past
        let move = this.add.tween({
-            targets: FGround,
+            targets: this.FGround,
             x: {from: this.w*0.9, to: this.w*0.8},
             duration: 1000,
             yoyo: true,
@@ -139,10 +128,11 @@ class playscene extends gamescene {
             ease: 'cubic.inout',
         });
 
-        move.on('start', () => FGround.setTintFill(0xffff00));
-
-        //NEED TO FIGURE OUT A WAY FOR THE FAN TO WORK TO RAISE THE PLAYER. 
-
+        move.on('start', () => this.FGround.setTintFill(0xffff00));
+        
+        this.l3_flag = new flag(this, 200, 400, "flag", this.player, "endscene", this.levelnum);
+        this.l3_flag.flagimg.setScale(0.45)
+        //NEED TO FIGURE OUT A WAY FOR THE FAN TO WORK TO RAISE THE PLAYER.
         //CONTEMPLATING REPLACING THE ROBOTS WITH TWO ELECTRICAL BOXES THAT NEED TO BE MOVED ONTO THE BUTTON (WILL STILL HARM YOU IN THE PAST
         //BECAUSE THEY ARE ELECTRIFIED IN THE PAST). WILL ASK GROUP MEMBERS ABOUT THIS.
 
@@ -151,6 +141,31 @@ class playscene extends gamescene {
     
     }  
     updates(){
+        if(this.levelnum == 3){
+            //gonna need another check to see if we are in the future and the fan is active
+            if(this.player.x > this.w*0.85 && this.player.y > this.h*0.2){
+                console.log('fan zone');
+                this.player.thrustLeft(0.01);
+                this.wind.start();
+            }else{
+                this.wind.stop();
+            }
+            //keep updating the flag's position
+            this.l3_flag.flagimg.x = this.FGround.x;
+            this.l3_flag.flagimg.y = this.FGround.y-115; 
+        }
+    }
+    
+    floorplacer(x, y, width, texture){
+        let temp = this.matter.add.image(x, y, texture);
+        let dist = temp.width-5;
+        temp.setStatic(true);
+        for(let i = dist; i < width; i = i+dist){
+            temp = this.matter.add.image(x+i, y, texture);
+            temp.setStatic(true);
+            temp = this.matter.add.image(x-i, y, texture);
+            temp.setStatic(true);
+        }
     }
 }
 
@@ -206,6 +221,7 @@ class wood {
             this.ash.x = this.unburnt.x;
             this.ash.y = this.unburnt.y;
             this.unburnt.y = 3000;
+            this.unburnt.setAngularVelocity(0,0);
             if(this.fire!=null){
                 this.fire.y = 3000;
             }
@@ -214,6 +230,7 @@ class wood {
         if(!state && this.onfire){  
             this.unburnt.setStatic(this.floppy);
             this.unburnt.setOrigin(0.5, 1);
+            this.unburnt.setVelocity(0, 0);
             this.unburnt.x = this.ash.x;
             this.unburnt.y = this.ash.y;
             this.unburnt.setOrigin(0.5, 0.5);
@@ -222,6 +239,7 @@ class wood {
                 this.fire.x = this.unburnt.x;
             }
             this.ash.y = 3000;
+            this.ash.setAngularVelocity(0,0);
         }
     }
 }
@@ -269,7 +287,7 @@ class winscene extends Phaser.Scene{
         let h = this.game.config.height;
         let wintext = this.add.text(w*0.5, h*0.5, "YOU WON!");
         wintext.setOrigin(0.5, 0.5);
-        wintext.setScale(4);
+        wintext.setFontSize(65);
 
         let transitionDuration = 1000;
         this.input.on("pointerdown", () =>{
@@ -280,6 +298,31 @@ class winscene extends Phaser.Scene{
         });
     }
 
+}
+
+class endscene extends Phaser.Scene{
+    constructor(){
+        super('endscene');
+    }
+    create(){
+        let w = this.game.config.width;
+        let h = this.game.config.height;
+        let wintext = this.add.text(w*0.5, h*0.5, "YOU BEAT THE GAME! Thank you for playing!\n\t\t\t\t\t\t\t\t\t\tClick to play again!!");
+        wintext.setOrigin(0.5, 0.5);
+        wintext.setFontSize(65);
+
+        this.add.text(w*0.5, h*0.7, "Game created by:\nNathaniel Chu (Technology Lead)\nPeter Ampudia (Production Lead)\nIsai Rincon (Testing Lead)")
+        .setOrigin(0.5,0.5)
+        .setFontSize(55)
+
+        let transitionDuration = 1000;
+        this.input.on("pointerdown", () =>{
+            this.cameras.main.fade(transitionDuration, 0, 0, 0);
+            this.time.delayedCall(transitionDuration, () => {
+                this.scene.start("playscene", {levelnum: this.levelnum = 1});
+            });
+        });
+    }
 }
 /*
 class wood {
@@ -392,6 +435,6 @@ const config = {
         }
     },
     backgroundColor: 0xbbbbbb,
-    scene: [playscene, winscene]
+    scene: [playscene, winscene, endscene]
 };
 const game = new Phaser.Game(config);
