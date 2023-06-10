@@ -1,6 +1,6 @@
 class gamescene extends Phaser.Scene {
     init(data){
-        this.levelnum = data.levelnum || 3;
+        this.levelnum = data.levelnum || 1;
     }
     constructor(key){
         super(key);
