@@ -31,6 +31,8 @@ class playscene extends gamescene {
 
         this.addUpdates(wall, burningbarrel);
 
+        //console.log(this.unjumpable[2].id);
+
         new flag(this, this.w*0.2, this.h*0.682, "flag", this.player, "winscene", this.levelnum);
 
         this.floorplacer(this.w*0.5, this.h*0.91, this.w, "flooredit");
