@@ -115,6 +115,15 @@ class playscene extends gamescene {
         });
 
 
+        let b1 = this.add.rectangle(100, this.h*0.6, 75, 90, 0xff00ff).setInteractive();
+        //b1.preFX.addGlow();
+        this.bot1 = this.matter.add.gameObject(b1);
+
+
+        let b2 = this.add.rectangle(this.w*0.15, this.h*0.6, 75, 90, 0xff00ff);
+        this.bot2 = this.matter.add.gameObject(b2);
+
+
         this.FGround = this.matter.add.image(this.w, this.h*0.2, 'floor');
         this.FGround.setScale(1.2);
         this.FGround.angle = 90;
