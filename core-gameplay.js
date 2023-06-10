@@ -53,7 +53,7 @@ class playscene extends gamescene {
     level2(){
         this.floorplacer(this.w*0.5, this.h*0.91, this.w, "flooredit");
 
-        let ground2 = this.matter.add.image(this.w*0.2, this.h*0.3, 'floor');
+        /*let ground2 = this.matter.add.image(this.w*0.2, this.h*0.3, 'floor');
         ground2.setScale(3);
         ground2.setStatic(true);
         ground2.angle = 90;
@@ -62,7 +62,9 @@ class playscene extends gamescene {
         let ground3 = this.matter.add.image(this.w*0.8, this.h*0.3, 'floor');
         ground3.setScale(3);
         ground3.setStatic(true);
-        ground3.angle = 90;
+        ground3.angle = 90;*/
+        
+        
 
         new nonobox(this, ground3.x-405, ground3.y, 0.8, 0.53, ground3);
         new nonobox(this, ground2.x+405, ground3.y, 0.8, 0.53, ground2);
