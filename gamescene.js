@@ -35,11 +35,15 @@ class gamescene extends Phaser.Scene {
         let looping = this.sound.add("loop");
         if(!looping.isPlaying){
             looping.play();
+            looping.loop = true;
+            looping.volume = 0.45;
         }
-        this.message = this.add.text(this.w*0.5, this.h*0.9, "");
-        this.message.setFill(0x000000);
-        this.message.setTint(0xFFFFFF);
-        this.message.setAlpha(0);
+        this.message = this.add.text(this.w*0.5, this.h*0.9, "helllo!");
+        this.message.setDepth(20);
+        //this.message.setFill(0x000000);
+        this.message.setTint(0x000000);
+        this.message.setAlpha(1);
+        this.message.setFontSize(20);
         this.w = this.game.config.width;
         this.h = this.game.config.height;
         this.borderwalls = this.matter.world.setBounds().getAllBodies();
@@ -147,9 +151,6 @@ class gamescene extends Phaser.Scene {
         });
         this.onEnter();
         if (this.levelnum == 1) {
-            
-            looping.loop = true;
-            looping.volume = 0.45;
             this.updatelist = [];
             this.unjumpable = [];
             this.state = false;
