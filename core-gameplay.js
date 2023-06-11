@@ -1,5 +1,6 @@
 class playscene extends gamescene {
     cursors;
+    sprites = [];
     constructor(){
         super("playscene");
         
@@ -10,7 +11,7 @@ class playscene extends gamescene {
         this.load.image('wood', 'wood.png');
         this.load.image('firewood', 'flamingwood.png');
         this.load.image('floor', 'floor.png');
-        this.load.image('flag', 'flag.png');
+        this.load.image('flag', 'Door.png');
         this.load.image('sand', 'sandpile.png');
         this.load.image('wind', 'wind.png');
         this.load.image('flooredit','Floor Box.png');
@@ -22,6 +23,7 @@ class playscene extends gamescene {
         this.load.image("glassfuture", "GlassFuture.png");
         this.load.image("backTile", "Background.png");
         this.load.image("button", "Button.png");
+        this.load.image("dude", "guy.png");
     }
     onEnter(){
         
@@ -37,7 +39,7 @@ class playscene extends gamescene {
         
         //console.log(this.unjumpable[2].id);
 
-        new flag(this, this.w*0.2, this.h*0.682, "flag", this.player, "winscene", this.levelnum);
+        new flag(this, this.w*0.2, this.h*0.70, "flag", this.player, "winscene", this.levelnum);
 
         this.floorplacer(this.w*0.5, this.h*0.91, this.w, "flooredit");
         
@@ -77,7 +79,7 @@ class playscene extends gamescene {
         //console.log(hourglass.bottomsand.body.id);
         //console.log(hourglass.topsand);
 
-        new flag(this, this.w*0.1, this.h*0.16, "flag", this.player, "winscene", this.levelnum);
+        new flag(this, this.w*0.1, this.h*0.17, "flag", this.player, "winscene", this.levelnum);
         let pressed = false
         this.matter.world.on('collisionstart', (event, bodyA, bodyB) =>{
             //console.log(bodyA.id);
@@ -98,24 +100,66 @@ class playscene extends gamescene {
         
     }
     level3(){
-        let TopGround = this.matter.add.image(this.w*0.1, this.h*0.25, 'floor');
-        TopGround.setScale(2).setStatic(true);
-        TopGround.angle = 90;
+    
+        let text;
+        if (this.input.gamepad.total === 0)
+        {
+            text = this.add.text(10, 10, 'Press any button on a connected Gamepad', { font: '16px Courier', fill: '#00ff00' });
+
+            this.input.gamepad.once('connected', function (pad)
+            {
+
+                console.log('connected', pad.id);
+
+                for (let i = 0; i < this.input.gamepad.total; i++)
+                {
+                    this.sprites.push(this.add.sprite(Phaser.Math.Between(200, 600), Phaser.Math.Between(100, 500), 'dude'));
+                }
+
+                text.destroy();
+
+            }, this);
+        }
+        else
+        {
+            for (let i = 0; i < this.input.gamepad.total; i++)
+            {
+                this.sprites.push(this.add.sprite(Phaser.Math.Between(200, 600), Phaser.Math.Between(100, 500), 'dude'));
+            }
+        }
+        let TopGround = this.matter.add.image(this.w*0.1, this.h*0.25, 'floor2');
+        TopGround.setScale(1.1).setStatic(true);
+        //TopGround.angle = 90;
         this.player.x = this.w*0.1;
         this.player.y = this.h*0.1;
 
-        let LGround = this.matter.add.image(0, this.h, 'floor');
-        LGround.setScale(30, 3).setStatic(true);
+        let LGround = this.matter.add.image(193, this.h, 'flooredit');
+        LGround.setStatic(true);
+        let LGround2 = this.matter.add.image(193, this.h*0.9, 'flooredit');
+        LGround2.setStatic(true);
+        let LGround3 = this.matter.add.image(193, this.h*0.8, 'flooredit');
+        LGround3.setStatic(true);
+
+        let LGround4 = this.matter.add.image(this.w*0.3, this.h, 'flooredit');
+        LGround4.setStatic(true);
+        let LGround5 = this.matter.add.image(this.w*0.3, this.h*0.9, 'flooredit');
+        LGround5.setStatic(true);
+        let LGround6 = this.matter.add.image(this.w*0.3, this.h*0.8, 'flooredit');
+        LGround6.setStatic(true);
         //LGround.angle = 90;
 
-        let RGround = this.matter.add.image(this.w - 600, this.h, 'floor');
-        RGround.setScale(16.5, 2).setStatic(true);
-        RGround.angle = 90;
+        let RGround = this.matter.add.image(this.w*0.7, this.h, 'flooredit');
+        RGround.setStatic(true);
+        let RGround2 = this.matter.add.image(this.w*0.7, this.h*0.9, 'flooredit');
+        RGround2.setStatic(true);
+        let RGround3 = this.matter.add.image(this.w*0.7, this.h*0.8, 'flooredit');
+        RGround3.setStatic(true);
+        //RGround.angle = 90;
         
         //USE THE BUTTON SPRITE INSTEAD
-        let Button = this.matter.add.image(this.w*0.467, this.h*0.8, 'floor');
-        Button.setTintFill(0xff0000).setStatic(true).setScale(2, 1.063); //(y, x)
-        Button.angle = 90;
+        let Button = this.matter.add.image(this.w*0.5, this.h*0.8, 'button');
+        Button.setTintFill(0xff0000).setStatic(true)//d.setScale(); //(y, x)
+        //Button.angle = 90;
 
         this.Boxes = new boxes(this, 'box_on', 'box_off');
 
@@ -124,7 +168,7 @@ class playscene extends gamescene {
         this.addUpdates(this.Boxes, this.Fan);
 
         this.matter.world.on('collisionstart', (event, bodyA, bodyB) =>{
-            //console.log("box: "+this.Boxes.box1.body.id+" body a:"+bodyA.id);
+          //  console.log("box: "+this.Boxes.box1.body.id+" body a:"+bodyA.id);
             if(bodyB == this.Boxes.box1.body && bodyA == Button.body && !this.state){
                 this.Fan.turn_on();
               //  console.log('fan on');
@@ -158,6 +202,7 @@ class playscene extends gamescene {
 
     
     }  
+
     updates(){
         if(this.levelnum == 3){
             //gonna need another check to see if we are in the future and the fan is active
@@ -170,7 +215,41 @@ class playscene extends gamescene {
             // }
             //keep updating the flag's position
              this.l3_flag.flagimg.x = this.FGround.x;
-             this.l3_flag.flagimg.y = this.FGround.y-115; 
+             this.l3_flag.flagimg.y = this.FGround.y-100; 
+        }
+
+        const pads = this.input.gamepad.gamepads;
+
+        for (let i = 0; i < pads.length; i++)
+        {
+            const gamepad = pads[i];
+
+            if (!gamepad)
+            {
+                continue;
+            }
+
+            const sprite = this.sprites[i];
+
+            if (gamepad.left)
+            {
+                sprite.x -= 4;
+                sprite.flipX = false;
+            }
+            else if (gamepad.right)
+            {
+                sprite.x += 4;
+                sprite.flipX = true;
+            }
+
+            if (gamepad.up)
+            {
+                sprite.y -= 4;
+            }
+            else if (gamepad.down)
+            {
+                sprite.y += 4;
+            }
         }
     }
     
@@ -212,33 +291,12 @@ class boxes {
             this.futurebox1.x = this.box1.x;
             this.futurebox1.y = this.box1.y;
             this.box1.y=5000;
-            //this.futurebox1.setActive(true);
-
-            // this.futurebox2.x = this.box2.x;
-            // this.futurebox2.y = this.box2.y;
-            // this.box2.y=5000;
-            // //this.futurebox2.setActive(true);
-
-            // this.futurebox3.x = this.box3.x;
-            // this.futurebox3.y = this.box3.y;
-            // this.box3.y=5000;
-            // //this.futurebox3.setActive(true);
         }
         if(!state){
             this.box1.x = this.futurebox1.x;
             this.box1.y = this.futurebox1.y;
 
             this.futurebox1.y=5000;
-
-            // this.box2.x = this.futurebox2.x;
-            // this.box2.y = this.futurebox2.y;
-
-            // this.futurebox2.y=5000;
-
-            // this.box3.x = this.futurebox3.x;
-            // this.box3.y = this.futurebox3.y;
-
-            // this.futurebox3.y=5000;
         }
     }
 }
@@ -247,7 +305,7 @@ class fan{
     constructor(scene, fan, particle){
         this.h = scene.game.config.height;
         this.w = scene.game.config.width;
-        this.fan = scene.matter.add.image(this.w*0.915, this.h*0.9, fan).setInteractive().setStatic(true);
+        this.fan = scene.matter.add.image(this.w*0.9, this.h*0.9, fan).setInteractive().setStatic(true);
         this.wind = scene.add.particles(0, 0, particle, {
             scale: { start: 0.3, end: 0 },
             x: { min: this.w*0.85, max: this.w*0.97 },
@@ -255,21 +313,12 @@ class fan{
             lifespan: 1000
         });   
         this.wind.stop();
-        //ONLY STARTS IF ROBOTS OR BOXES ARE ON THE BUTTON AND WE ARE IN THE PAST
     }
     //state: true = future, false = past/present
     futureswap(state){
         if(state){
             this.wind.stop();
         }
-        // if(!state && (this.box1.x > this.w*0.5 && 
-        // this.box1.x < this.w*0.8 && 
-        // this.box2.x > this.w*0.5 && 
-        // this.box2.x < this.w*0.8 && 
-        // this.box3.x > this.w*0.5 && 
-        // this.box3.x < this.w*0.8)){
-        //     this.wind.start();
-        // }
     }
 
     turn_on(){
@@ -543,6 +592,9 @@ const config = {
         matter: {
             debug:true,
         }
+    },
+    input: {
+        gamepad: true
     },
     backgroundColor: 0xbbbbbb,
     scene: [playscene, winscene, endscene]
