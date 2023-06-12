@@ -55,6 +55,19 @@ class playscene extends gamescene {
                 }
             });
         this.addUpdates(wall, burningbarrel);
+
+        this.add.text(this.w*0.1, this.h*0.4, 'Tap and hold here to move left').setFontSize(24)
+        .setTintFill(0x000000)
+        .preFX.addGlow();
+        this.add.text(this.w*0.65, this.h*0.4, 'Tap and hold here to move right').setFontSize(24)
+        .setTintFill(0x000000)
+        .preFX.addGlow();;
+        this.add.text(this.w*0.4, this.h*0.2, 'Tap here to jump straight up').setFontSize(24)
+        .setTintFill(0x000000)
+        .preFX.addGlow();;
+        this.add.text(this.w*0.4, this.h*0.8, 'Tap here to switch state of time').setFontSize(24).setDepth(10)
+        .setTintFill(0x000000)
+        .preFX.addGlow();;
     }
 
     level2(){
@@ -450,7 +463,7 @@ class winscene extends Phaser.Scene{
     create(){
         let w = this.game.config.width;
         let h = this.game.config.height;
-        let wintext = this.add.text(w*0.5, h*0.5, "YOU WON!");
+        let wintext = this.add.text(w*0.5, h*0.5, "\t\t\t\t\tYOU WON!\n Tap to continue!");
         wintext.setOrigin(0.5, 0.5);
         wintext.setFontSize(65);
 
