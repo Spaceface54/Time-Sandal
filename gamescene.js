@@ -286,7 +286,7 @@ class gamescene extends Phaser.Scene {
             [0,0,0,0,0,0,0,0,0,0]
         ];
 
-        const map = this.make.tilemap({data: this.level1, tileWidth: 379, tileHeight: 304 });
+        const map = this.make.tilemap({key: 'level3', tileWidth: 379, tileHeight: 304 });
         const tiles = map.addTilesetImage('backTile');
         const layer = map.createLayer(0, tiles, 0, 0);
     }
