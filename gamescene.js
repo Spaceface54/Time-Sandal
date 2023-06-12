@@ -33,7 +33,11 @@ class gamescene extends Phaser.Scene {
     }
     create() {
         let looping = this.sound.add("loop");
-        if(!looping.isPlaying){
+        if(localStorage.getItem("soundplaying") == null){
+            localStorage.setItem("soundplaying", "y");
+        }
+        console.log(localStorage.getItem("soundplaying") == "y");
+        if(!looping.isPlaying && localStorage.getItem("soundplaying") == "y"){
             looping.play();
             looping.loop = true;
             looping.volume = 0.45;
@@ -57,6 +61,40 @@ class gamescene extends Phaser.Scene {
         this.message.setAlpha(1);
         this.message.setScale(2);
         console.log(this.message.x);
+
+        this.add.text(this.w*0.95, this.h*0.9, "📺")
+            .setScale(4)
+            .setDepth(12)
+            .setInteractive({useHandCursor: true})
+            .on('pointerdown', () => {
+                if (this.scale.isFullscreen) {
+                    this.scale.stopFullscreen();
+                } else {
+                    this.scale.startFullscreen();
+                }
+            });
+        let sound;
+        if(localStorage.getItem("soundplaying") == "y"){
+            sound = this.add.text(this.w*0.95, this.h*0.8, "🔊");
+        }
+        else if(localStorage.getItem("soundplaying") == "n"){
+            sound = this.add.text(this.w*0.95, this.h*0.8, "🔇");
+        }
+        sound
+            .setScale(4)
+            .setDepth(12)
+            .setInteractive({useHandCursor: true})
+            .on('pointerdown', () => {
+                if (localStorage.getItem("soundplaying") == "y") {
+                    sound.setText("🔇");
+                    looping.stop();
+                    localStorage.setItem("soundplaying", "n");
+                } else if(localStorage.getItem("soundplaying") == "n"){
+                    sound.setText("🔊");
+                    looping.play();
+                    localStorage.setItem("soundplaying", "y");
+                }
+            });
 
         let switching = false;
 
