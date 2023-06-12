@@ -33,13 +33,15 @@ class gamescene extends Phaser.Scene {
     }
     create() {
         let looping = this.sound.add("loop");
-        if(!looping.isPlaying){
-            looping.play();
+        if(localStorage.getItem("soundplaying") == null){
+            localStorage.setItem("soundplaying", "y");
         }
-        this.message = this.add.text(this.w*0.5, this.h*0.9, "");
-        this.message.setFill(0x000000);
-        this.message.setTint(0xFFFFFF);
-        this.message.setAlpha(0);
+        console.log(localStorage.getItem("soundplaying") == "y");
+        if(!looping.isPlaying && localStorage.getItem("soundplaying") == "y"){
+            looping.play();
+            looping.loop = true;
+            looping.volume = 0.45;
+        }
         this.w = this.game.config.width;
         this.h = this.game.config.height;
         this.borderwalls = this.matter.world.setBounds().getAllBodies();
@@ -51,6 +53,48 @@ class gamescene extends Phaser.Scene {
         this.forwardsound.volume = 0.1;
         this.backsound = this.sound.add("back");
         this.backsound.volume = 0.1;
+        this.message = this.add.text(this.w*0.5, this.h*0.05, "");
+        this.message.setOrigin(0.5, 0.5);
+        this.message.setDepth(20);
+        //this.message.setFill(0x000000);
+        this.message.setTint(0x000000);
+        this.message.setAlpha(1);
+        this.message.setScale(2);
+        console.log(this.message.x);
+
+        this.add.text(this.w*0.95, this.h*0.9, "📺")
+            .setScale(4)
+            .setDepth(12)
+            .setInteractive({useHandCursor: true})
+            .on('pointerdown', () => {
+                if (this.scale.isFullscreen) {
+                    this.scale.stopFullscreen();
+                } else {
+                    this.scale.startFullscreen();
+                }
+            });
+        let sound;
+        if(localStorage.getItem("soundplaying") == "y"){
+            sound = this.add.text(this.w*0.95, this.h*0.8, "🔊");
+        }
+        else if(localStorage.getItem("soundplaying") == "n"){
+            sound = this.add.text(this.w*0.95, this.h*0.8, "🔇");
+        }
+        sound
+            .setScale(4)
+            .setDepth(12)
+            .setInteractive({useHandCursor: true})
+            .on('pointerdown', () => {
+                if (localStorage.getItem("soundplaying") == "y") {
+                    sound.setText("🔇");
+                    looping.stop();
+                    localStorage.setItem("soundplaying", "n");
+                } else if(localStorage.getItem("soundplaying") == "n"){
+                    sound.setText("🔊");
+                    looping.play();
+                    localStorage.setItem("soundplaying", "y");
+                }
+            });
 
         let switching = false;
 
@@ -147,9 +191,6 @@ class gamescene extends Phaser.Scene {
         });
         this.onEnter();
         if (this.levelnum == 1) {
-            
-            looping.loop = true;
-            looping.volume = 0.45;
             this.updatelist = [];
             this.unjumpable = [];
             this.state = false;
@@ -300,7 +341,7 @@ class gamescene extends Phaser.Scene {
             targets: this.message,
             alpha: { from: 1, to: 0 },
             easing: 'Quintic.in',
-            duration: 4 * this.transitionDuration
+            duration: duration
         });
 
     }
