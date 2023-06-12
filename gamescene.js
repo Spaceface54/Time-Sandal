@@ -17,6 +17,7 @@ class gamescene extends Phaser.Scene {
         this.message;
         this.forwardsound;
         this.backsound;
+        this.looping
     }
     preload() {
         this.load.path = "./assets/";
@@ -32,15 +33,17 @@ class gamescene extends Phaser.Scene {
         console.log("has not implimented images");
     }
     create() {
-        let looping = this.sound.add("loop");
+        if(this.looping == null){
+            this.looping = this.sound.add("loop");
+        }
         if(localStorage.getItem("soundplaying") == null){
             localStorage.setItem("soundplaying", "y");
         }
         console.log(localStorage.getItem("soundplaying") == "y");
-        if(!looping.isPlaying && localStorage.getItem("soundplaying") == "y"){
-            looping.play();
-            looping.loop = true;
-            looping.volume = 0.45;
+        if(!this.looping.isPlaying && localStorage.getItem("soundplaying") == "y"){
+            this.looping.play();
+            this.looping.loop = true;
+            this.looping.volume = 0.45;
         }
         this.w = this.game.config.width;
         this.h = this.game.config.height;
@@ -87,11 +90,11 @@ class gamescene extends Phaser.Scene {
             .on('pointerdown', () => {
                 if (localStorage.getItem("soundplaying") == "y") {
                     sound.setText("🔇");
-                    looping.stop();
+                    this.looping.stop();
                     localStorage.setItem("soundplaying", "n");
                 } else if(localStorage.getItem("soundplaying") == "n"){
                     sound.setText("🔊");
-                    looping.play();
+                    this.looping.play();
                     localStorage.setItem("soundplaying", "y");
                 }
             });
