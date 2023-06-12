@@ -156,8 +156,11 @@ class playscene extends gamescene {
         RGround3.setStatic(true);
         //RGround.angle = 90;
         
+        let BGround = this.matter.add.image(this.w*0.5, this.h, 'flooredit').setScale(1);
+        BGround.setStatic(true);
+
         //USE THE BUTTON SPRITE INSTEAD
-        let Button = this.matter.add.image(this.w*0.5, this.h*0.8, 'button');
+        let Button = this.matter.add.image(this.w*0.5, this.h*0.793, 'button');
         Button.setTintFill(0xff0000).setStatic(true)//d.setScale(); //(y, x)
         //Button.angle = 90;
 
@@ -173,24 +176,28 @@ class playscene extends gamescene {
                 this.Fan.turn_on();
               //  console.log('fan on');
             }
+            //restart scene because box electrocuted you
+            if(bodyB == this.Boxes.box1.body && bodyA == this.player.body && !this.state){
+                this.scene.start('playscene', {levelnum: 3})
+            }
         })
 
-        this.FGround = this.matter.add.image(this.w, this.h*0.2, 'floor');
-        this.FGround.setScale(1.2);
-        this.FGround.angle = 90;
+        this.FGround = this.matter.add.image(this.w, this.h*0.2, 'floor2');
+        //this.FGround.setScale(1.2);
+        //this.FGround.angle = 90;
         this.FGround.setStatic(true);
         
         //should only move and be electrified if in the past
        let move = this.add.tween({
             targets: this.FGround,
-            x: {from: this.w*0.9, to: this.w*0.8},
-            duration: 1000,
+            x: {from: this.w*0.9, to: this.w*0.7},
+            duration: 1200,
             yoyo: true,
             repeat: -1,
             ease: 'cubic.inout',
         });
 
-        move.on('start', () => this.FGround.setTintFill(0xffff00));
+        //move.on('start', () => this.FGround.setTintFill(0xffff00));
         
         this.l3_flag = new flag(this, 200, 400, "flag", this.player, "endscene", this.levelnum);
         this.l3_flag.flagimg.setScale(0.45)
@@ -204,18 +211,17 @@ class playscene extends gamescene {
     }  
 
     updates(){
+       //console.log("box_x: "+ this.Boxes.box1.x+"\nboxy: "+ this.Boxes.box1.y);
         if(this.levelnum == 3){
+           // console.log('it be level 3')
             //gonna need another check to see if we are in the future and the fan is active
-            if(this.player.x > this.w*0.85 && this.player.y > this.h*0.2 && !this.state && this.Boxes.box1.y > this.h*0.7 && this.Boxes.box1.x < this.w*0.6){
-                //console.log('fan zone');
+            if(this.player.x > this.w*0.8 && this.player.y > this.h*0.2 && !this.state && this.Boxes.box1.y > this.h*0.6 && this.Boxes.box1.x < this.w*0.7){
+                console.log('fan zone');
                 this.player.thrustLeft(0.01);
-               // this.wind.start();
-             }//else{
-            //     this.wind.stop();
-            // }
+             }
             //keep updating the flag's position
              this.l3_flag.flagimg.x = this.FGround.x;
-             this.l3_flag.flagimg.y = this.FGround.y-100; 
+             this.l3_flag.flagimg.y = this.FGround.y-135;
         }
 
         const pads = this.input.gamepad.gamepads;
@@ -308,7 +314,7 @@ class fan{
         this.fan = scene.matter.add.image(this.w*0.9, this.h*0.9, fan).setInteractive().setStatic(true);
         this.wind = scene.add.particles(0, 0, particle, {
             scale: { start: 0.3, end: 0 },
-            x: { min: this.w*0.85, max: this.w*0.97 },
+            x: { min: this.w*0.81, max: this.w*0.99 },
             y: { start: this.h*0.85, end: 400, ease: 'linear' },
             lifespan: 1000
         });   
@@ -590,7 +596,7 @@ const config = {
     physics: {
         default: 'matter',
         matter: {
-            debug:true,
+            //debug:true,
         }
     },
     input: {
