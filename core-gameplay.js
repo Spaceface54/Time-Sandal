@@ -113,33 +113,32 @@ class playscene extends gamescene {
         
     }
     level3(){
-    
-        let text;
-        if (this.input.gamepad.total === 0)
-        {
-            text = this.add.text(10, 10, 'Press any button on a connected Gamepad', { font: '16px Courier', fill: '#00ff00' });
+        // let text;
+        // if (this.input.gamepad.total === 0)
+        // {
+        //     text = this.add.text(10, 10, 'Press any button on a connected Gamepad', { font: '16px Courier', fill: '#00ff00' });
 
-            this.input.gamepad.once('connected', function (pad)
-            {
+        //     this.input.gamepad.once('connected', function (pad)
+        //     {
 
-                console.log('connected', pad.id);
+        //         console.log('connected', pad.id);
 
-                for (let i = 0; i < this.input.gamepad.total; i++)
-                {
-                    this.sprites.push(this.add.sprite(Phaser.Math.Between(200, 600), Phaser.Math.Between(100, 500), 'dude'));
-                }
+        //         for (let i = 0; i < this.input.gamepad.total; i++)
+        //         {
+        //             this.sprites.push(this.add.sprite(Phaser.Math.Between(200, 600), Phaser.Math.Between(100, 500), 'dude'));
+        //         }
 
-                text.destroy();
+        //         text.destroy();
 
-            }, this);
-        }
-        else
-        {
-            for (let i = 0; i < this.input.gamepad.total; i++)
-            {
-                this.sprites.push(this.add.sprite(Phaser.Math.Between(200, 600), Phaser.Math.Between(100, 500), 'dude'));
-            }
-        }
+        //     }, this);
+        // }
+        // else
+        // {
+        //     for (let i = 0; i < this.input.gamepad.total; i++)
+        //     {
+        //         this.sprites.push(this.add.sprite(Phaser.Math.Between(200, 600), Phaser.Math.Between(100, 500), 'dude'));
+        //     }
+        // }
         let TopGround = this.matter.add.image(this.w*0.1, this.h*0.25, 'floor2');
         TopGround.setScale(1.1).setStatic(true);
         //TopGround.angle = 90;
@@ -237,39 +236,38 @@ class playscene extends gamescene {
              this.l3_flag.flagimg.y = this.FGround.y-135;
         }
 
-        const pads = this.input.gamepad.gamepads;
+    //     const pads = this.input.gamepad.gamepads;
 
-        for (let i = 0; i < pads.length; i++)
-        {
-            const gamepad = pads[i];
+    //     for (let i = 0; i < pads.length; i++)
+    //     {
+    //         const gamepad = pads[i];
 
-            if (!gamepad)
-            {
-                continue;
-            }
+    //         if (!gamepad)
+    //         {
+    //             continue;
+    //         }
 
-            const sprite = this.sprites[i];
+    //         const sprite = this.sprites[i];
+    //         if (gamepad.left)
+    //         {
+    //             player.x -= 4;
+    //             sprite.flipX = false;
+    //         }
+    //         else if (gamepad.right)
+    //         {
+    //             sprite.x += 4;
+    //             sprite.flipX = true;
+    //         }
 
-            if (gamepad.left)
-            {
-                sprite.x -= 4;
-                sprite.flipX = false;
-            }
-            else if (gamepad.right)
-            {
-                sprite.x += 4;
-                sprite.flipX = true;
-            }
-
-            if (gamepad.up)
-            {
-                sprite.y -= 4;
-            }
-            else if (gamepad.down)
-            {
-                sprite.y += 4;
-            }
-        }
+    //         if (gamepad.up)
+    //         {
+    //             sprite.y -= 4;
+    //         }
+    //         else if (gamepad.down)
+    //         {
+    //             sprite.y += 4;
+    //         }
+    //     }
     }
     
     floorplacer(x, y, width, texture){

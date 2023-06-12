@@ -1,7 +1,7 @@
 class gamescene extends Phaser.Scene {
     sprite = [];
     init(data) {
-        this.levelnum = data.levelnum || 1;
+        this.levelnum = data.levelnum || 3;
     }
     constructor(key) {
         super(key);
@@ -33,6 +33,7 @@ class gamescene extends Phaser.Scene {
         console.log("has not implimented images");
     }
     create() {
+        this.backgroundTiles();
         if(this.looping == null){
             this.looping = this.sound.add("loop");
         }
@@ -100,35 +101,6 @@ class gamescene extends Phaser.Scene {
             });
 
         let switching = false;
-
-        let text;
-
-        // if (this.input.gamepad.total === 0)
-        // {
-        //     text = this.add.text(10, 10, 'Press any button on a connected Gamepad', { font: '16px Courier', fill: '#00ff00' });
-
-        //     this.input.gamepad.once('connected', function (pad)
-        //     {
-
-        //         console.log('connected', pad.id);
-
-        //         for (let i = 0; i < this.input.gamepad.total; i++)
-        //         {
-        //             this.sprites.push(this.add.sprite(Phaser.Math.Between(200, 600), Phaser.Math.Between(100, 500), 'guy'));
-        //         }
-
-        //         text.destroy();
-
-        //     }, this);
-        // }
-        // else
-        // {
-        //     for (let i = 0; i < this.input.gamepad.total; i++)
-        //     {
-        //         this.sprites.push(this.add.sprite(Phaser.Math.Between(200, 600), Phaser.Math.Between(100, 500), 'guy'));
-        //     }
-        // }
-    
 
         let tintbox = this.add.rectangle(this.w*0.5, this.h*0.5, this.w, this.h, 0xb46a06);
         tintbox.setAlpha(0);
@@ -227,46 +199,6 @@ class gamescene extends Phaser.Scene {
         else {
             this.player.setVelocityX(0);
         }
-
-    //     const pads = this.input.gamepad.gamepads;
-
-    //     for (let i = 0; i < pads.length; i++)
-    //     {
-    //         const gamepad = pads[i];
-
-    //         if (!gamepad)
-    //         {
-    //             continue;
-    //         }
-
-    //         const sprite = this.sprites[i];
-
-    //         if (gamepad.left)
-    //         {
-    //             sprite.x -= 4;
-    //             sprite.flipX = false;
-    //         }
-    //         else if (gamepad.right)
-    //         {
-    //             sprite.x += 4;
-    //             sprite.flipX = true;
-    //         }
-
-    //         if (gamepad.up)
-    //         {
-    //             sprite.y -= 4;
-    //         }
-    //         else if (gamepad.down)
-    //         {
-    //             sprite.y += 4;
-    //         }
-        
-    // }
-
-
-
-
-
         this.updates();
     }
 
@@ -347,5 +279,15 @@ class gamescene extends Phaser.Scene {
             duration: duration
         });
 
+    }
+
+    backgroundTiles(){
+        const backGround = [
+            [0,0,0,0,0,0,0,0,0,0]
+        ];
+
+        const map = this.make.tilemap({data: this.level1, tileWidth: 379, tileHeight: 304 });
+        const tiles = map.addTilesetImage('backTile');
+        const layer = map.createLayer(0, tiles, 0, 0);
     }
 }
