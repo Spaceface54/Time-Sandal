@@ -10,6 +10,7 @@ class logo extends Phaser.Scene {
         this.load.image('game', 'Game.png');
         this.load.image('flop', 'Flop.png');
         this.load.image('gameflop', 'GameFlop.png');
+        this.load.image("backTile", "Background.png");
 
     }
     create() {
@@ -97,26 +98,41 @@ class title extends Phaser.Scene {
         this.load.image('title3', 'Title 3.png');
         this.load.image('title4', 'Title 4.png');
         this.load.audio('title_song', 'Potential_title_song.mp3');
+        this.load.image('sandal', 'time sandal.png');
     }
 
     create() {
         this.cameras.main.fadeIn(1000, 0, 0, 0);
-        let t = this.sound.add('title_song', {loop: true, volume: 0.35});
+        let t = this.sound.add('title_song', {loop: true, volume: 0.05});
         t.play(); 
-        this.add.text(500, 500, "Title Screen")
-            .setColor(0xffffff);
         let title1 = this.add.image(520, 180, 'title1')
-            .setScale(0.8, 0.8);
+            .setScale(0.8, 0.8)
+            .setDepth(10);
         let title2 = this.add.image(520, 180, 'title2')
             .setScale(0.8, 0.8)
+            .setDepth(10)
             .setVisible(false);
         let title3 = this.add.image(520, 180, 'title3')
             .setScale(0.8, 0.8)
+            .setDepth(10)
             .setVisible(false);
         let title4 = this.add.image(520, 180, 'title4')
             .setScale(0.8, 0.8)
+            .setDepth(10)
             .setVisible(false);
-        let start = this.add.text(520, 400, "Start")
+        let sandal = this.add.image(520, 500, 'sandal')
+            .setDepth(10)
+            .setScale(0.3);
+
+
+        this.tweens.add({
+            targets: sandal,
+            angle: 3600,
+            duration: 2000,
+            ease: 'Quint.inOut'
+        });
+
+        let start = this.add.text(520, 350, "Start")
             .setFontSize(40)
             .setColor(0xffffff)
             .setOrigin(0.5)
@@ -151,88 +167,51 @@ class title extends Phaser.Scene {
             title4.setVisible(true);
         });
 
-
-        let exit = this.add.text(520, 450, "Exit")
-            .setFontSize(40)
-            .setColor(0xffffff)
-            .setOrigin(0.5)
-            .setInteractive()
-            .setShadow(2, 2, '#000', 5)
-            .on('pointerover', () => {
-                exit.setScale(1.5);
-            })
-            .on('pointerout', () => {
-                exit.setScale(1);
-            });
-
-        // let sandEmitter = this.add.particles(0,0,'sand',{
-        //     scale: 0.3,
-        //     lifespan: 10000,
-        //     gravityY: 50,
-        //     frequency: 20,
-        //     maxVelocityX: 200,
-        //     maxVelocityY: 200,
-        //     blendMode: 'ADD',
-        //     alpha: 55
-        // });
-
-        let leftEmitter = this.add.particles(0, 0, 'sand', {
-            scale: 0.3,
+        let leftEmitter = this.add.particles(0, 0, 'sandal', {
+            scale: 0.1,
              lifespan: 6000,
             gravityX: 150,
-            frequency: 3,
-            rotate: Phaser.Math.Between(-180,180),
+            frequency: 110,
+            rotate: () => {return Phaser.Math.Between(-180,180)},
             maxVelocityX: 400,
             maxVelocityY: 200,
-            blendMode: 'ADD',
-            //alpha: 0.1
+            blendMode: 'SUBTRACT',
+            alpha: 0.5
         });
 
-        let rightEmitter = this.add.particles(0, 0, 'sand', {
-            scale: 0.3,
+        let rightEmitter = this.add.particles(0, 0, 'sandal', {
+            scale: 0.1,
             lifespan: 6000,
             gravityX: -150,
-            frequency: 3,
-            rotate: Phaser.Math.Between(-180,180),
+            frequency: 110,
+            rotate: () => {return Phaser.Math.Between(-180,180)},
             maxVelocityX: 400,
             maxVelocityY: 200,
-            blendMode: 'ADD',
-            //alpha: 1
+            blendMode: 'SUBTRACT',
+            alpha: 0.5
         });
 
         //Particle spawn box (xcoordstart,ycoordstart,xlength,ylength)
         const shape1 = new Phaser.Geom.Rectangle(200, 50, 600, 270);
-        const shapeLeft = new Phaser.Geom.Rectangle(0, 20, 0, 300);
-        const shapeRight = new Phaser.Geom.Rectangle(1040, 20, 0, 300);
+        const shapeLeft = new Phaser.Geom.Rectangle(-30, 20, 0, 300);
+        const shapeRight = new Phaser.Geom.Rectangle(1070, 20, 0, 300);
 
         //sandEmitter.addEmitZone({type:'random',source: shape1});
         leftEmitter.addEmitZone({ type: 'random', source: shapeLeft });
         rightEmitter.addEmitZone({ type: 'random', source: shapeRight });
 
-        // sandEmitter.createGravityWell({
-        //     x: 520,
-        //     y: 400,
-        //     power: 4.2,
-        //     epsilon: 650,
-        //     gravity: 200
-        // });
-
-        // leftEmitter.createGravityWell({
-        //     x: 520,
-        //     y: 200,
-        //     power: 4.2,
-        //     epsilon: 250,
-        //     gravity: 200
-        // });
-
-        // rightEmitter.createGravityWell({
-        //     x: 520,
-        //     y: 200,
-        //     power: 4.2,
-        //     epsilon: 650,
-        //     gravity: 200
-        // });
-
+        const backGround = [
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+            ];
+    
+            const map = this.make.tilemap({data: backGround, tileWidth: 378, tileHeight: 303 });
+            const tiles = map.addTilesetImage('backTile');
+            const layer = map.createLayer(0, tiles,0 ,0);
+            layer.setDepth(-1);
+        
     }
 
 }
