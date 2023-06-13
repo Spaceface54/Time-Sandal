@@ -101,7 +101,7 @@ class title extends Phaser.Scene {
         this.load.image('title4', 'Title 4.png');
         this.load.audio('title_song', 'Potential_title_song.mp3');
         this.load.image('sandal', 'time sandal.png');
-        this.load.image('sandy', 'sandy.png');
+        this.load.image('sandy', 'sandy2.png');
     }
 
     create() {
@@ -129,7 +129,7 @@ class title extends Phaser.Scene {
             .setDepth(10)
             .setAngle(20)
             .setScale(0.9);
-        let sandy = this.add.image(this.w / 2, 1600, 'sandy')
+        let sandy = this.add.image((this.w / 2) - 100, 1050, 'sandy')
             .setDepth(11);
 
 
