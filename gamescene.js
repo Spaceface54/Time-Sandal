@@ -1,7 +1,8 @@
 class gamescene extends Phaser.Scene {
     sprite = [];
     init(data) {
-        this.levelnum = data.levelnum || 3;
+        this.levelnum = data.levelnum || 1;
+        this.completed = data.completed || false;
     }
     constructor(key) {
         super(key);
@@ -17,11 +18,11 @@ class gamescene extends Phaser.Scene {
         this.message;
         this.forwardsound;
         this.backsound;
-        this.looping
+        this.looping;
     }
     preload() {
         this.load.path = "./assets/";
-        this.load.image('guy', 'guy.png');
+        this.load.image('guy', 'Guy 1.png');
         this.load.image('forwardback', 'forwardback.png');
         this.load.audio("loop", "loopingsoundt.mp3");
         this.load.image("backTile", "Background.png");
@@ -152,6 +153,50 @@ class gamescene extends Phaser.Scene {
             }
         });
 
+
+        this.input.on("swap", () =>{
+            if(!switching) {
+                switching = true;
+                this.state = !this.state;
+                let tempimg = this.add.image(this.w * 0.5, this.h * 0.3, "forwardback");
+                if (!this.state) {
+                    tempimg.angle = 180;
+                }
+                this.tweens.add({
+                    targets: tempimg,
+                    alpha: 0,
+                    duration: 200,
+                    onComplete: () => {
+                        tempimg.destroy();
+                        switching = false;
+                    }
+                })
+                this.updatelist.forEach(element => {
+                    element.futureswap(this.state);
+                });
+                
+                if(this.state){
+                    this.playsound(this.forwardsound, "*Whoosh*", 200);
+                    console.log(tintbox.alpha);
+                    this.add.tween({
+                        targets: tintbox,
+                        alpha: {from: 0, to: 0.5},
+                        duration: 200,
+                        repeat: 0
+                    });
+                }
+                else{
+                    this.playsound(this.forwardsound, "*Hsoohw*", 200);
+                    this.add.tween({
+                        targets: tintbox,
+                        alpha: 0,
+                        duration: 200,
+                        repeat: false
+                    });
+                }
+            }
+        });
+
         this.matter.world.on('collisionactive', (event, bodyA, bodyB) => {
             //is touching ground
             if (this.findunjumpable(event.pairs)) {
@@ -186,18 +231,55 @@ class gamescene extends Phaser.Scene {
     }
 
     update() {
-        this.player.setAngularVelocity(0);
-        let { x, y, isDown } = this.input.activePointer;
-        if (x < this.w * 0.4 && isDown) {
-            this.player.setVelocityX(-this.playerspeed, 0);
+        const pads = this.input.gamepad.gamepads;
+        if(pads!= null){
+            this.player.setAngularVelocity(0);
+            let { x, y, isDown } = this.input.activePointer;
+            if (x < this.w * 0.4 && isDown) {
+                this.player.setVelocityX(-this.playerspeed, 0);
 
-        }
-        else if (x > this.w * 0.6 && isDown) {
-            this.player.setVelocityX(this.playerspeed, 0);
+            }
+            else if (x > this.w * 0.6 && isDown) {
+                this.player.setVelocityX(this.playerspeed, 0);
 
-        }
-        else {
-            this.player.setVelocityX(0);
+            }
+            else {
+                this.player.setVelocityX(0);
+            }
+        }   
+        for (let i = 0; i < pads.length; i++)
+        {
+            const gamepad = pads[i];
+
+            if (!gamepad)
+            {
+                continue;
+            }
+
+            //const sprite = this.sprites[i];
+            if (gamepad.left)
+            {
+                this.player.setVelocityX(-this.playerspeed, 0);
+                //sprite.flipX = false;
+            }
+            else if (gamepad.right)
+            {
+                this.player.setVelocityX(this.playerspeed, 0);
+               //sprite.flipX = true;
+            }
+
+            if (gamepad.A)
+            {
+                if (this.touchingground) { //&& this.player.body.touching.down){
+                    this.player.setVelocityY(-10, 0);
+                }
+                //sprite.y -= 4;
+            }
+            if (gamepad.B)
+            {   
+                this.input.emit("swap");
+                //sprite.y += 4;
+            }
         }
         this.updates();
     }
@@ -283,11 +365,14 @@ class gamescene extends Phaser.Scene {
 
     backgroundTiles(){
         const backGround = [
-            [0,0,0,0,0,0,0,0,0,0]
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
         ];
 
-        const map = this.make.tilemap({key: 'level3', tileWidth: 379, tileHeight: 304 });
+        const map = this.make.tilemap({data: backGround, tileWidth: 378, tileHeight: 303 });
         const tiles = map.addTilesetImage('backTile');
-        const layer = map.createLayer(0, tiles, 0, 0);
+        const layer = map.createLayer(0, tiles,0 ,0);
     }
 }
