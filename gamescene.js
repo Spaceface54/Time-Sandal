@@ -51,7 +51,7 @@ class gamescene extends Phaser.Scene {
         this.h = this.game.config.height;
         this.borderwalls = this.matter.world.setBounds().getAllBodies();
         this.player = this.matter.add.sprite(this.w * 0.8, this.h * 0.7, 'guy');
-        this.player.setScale(0.3);
+        this.player.setScale(1.5);
         this.player.setBounce(0.2);
         this.player.body.inertia = Infinity;
         this.forwardsound = this.sound.add("forward");

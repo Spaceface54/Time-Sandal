@@ -6,9 +6,9 @@ class playscene extends gamescene {
         
     }
     images(){
-        this.load.image('firebarrel', 'burningbarrel.png');
+        this.load.image('firebarrel', 'Barrel.png');
         this.load.image('ash', 'ashpile.png');
-        this.load.image('wood', 'wood.png');
+        this.load.image('wood', 'Log.png');
         this.load.image('firewood', 'flamingwood.png');
         this.load.image('floor', 'floor.png');
         this.load.image('flag', 'Door.png');
@@ -32,14 +32,15 @@ class playscene extends gamescene {
 
     level1(){
         let wall = new wood(this, this.w*0.5,  this.h*0.6, false, "wood", "ash");
-        wall.unburnt.setScale(2);
+        //wall.unburnt.setScale();
         this.makeUnjumpapable(wall.unburnt);
         let burningbarrel = new wood(this, this.w*0.65,  this.h*0.7, true, "firebarrel", "ash");
         burningbarrel.burn();
-        
+        //burningbarrel.
+        burningbarrel.unburnt.setScale(0.5);
         //console.log(this.unjumpable[2].id);
 
-        new flag(this, this.w*0.2, this.h*0.70, "flag", this.player, "winscene", this.levelnum);
+        new flag(this, this.w*0.2, this.h*0.70, "flag", this.player, "winscene", this.levelnum, this.completed);
 
         this.floorplacer(this.w*0.5, this.h*0.91, this.w, "flooredit");
         
@@ -55,19 +56,20 @@ class playscene extends gamescene {
                 }
             });
         this.addUpdates(wall, burningbarrel);
-
-        this.add.text(this.w*0.1, this.h*0.4, 'Tap and hold here to move left').setFontSize(24)
-        .setTintFill(0x000000)
-        .preFX.addGlow();
-        this.add.text(this.w*0.65, this.h*0.4, 'Tap and hold here to move right').setFontSize(24)
-        .setTintFill(0x000000)
-        .preFX.addGlow();;
-        this.add.text(this.w*0.4, this.h*0.2, 'Tap here to jump straight up').setFontSize(24)
-        .setTintFill(0x000000)
-        .preFX.addGlow();;
-        this.add.text(this.w*0.4, this.h*0.8, 'Tap here to switch state of time').setFontSize(24).setDepth(10)
-        .setTintFill(0x000000)
-        .preFX.addGlow();;
+        if(!this.completed){
+            this.add.text(this.w*0.1, this.h*0.4, 'Tap and hold here to move left').setFontSize(24)
+            .setTintFill(0x000000)
+            .preFX.addGlow();
+            this.add.text(this.w*0.65, this.h*0.4, 'Tap and hold here to move right').setFontSize(24)
+            .setTintFill(0x000000)
+            .preFX.addGlow();
+            this.add.text(this.w*0.4, this.h*0.2, 'Tap here to jump straight up').setFontSize(24)
+            .setTintFill(0x000000)
+            .preFX.addGlow();
+            this.add.text(this.w*0.4, this.h*0.8, 'Tap here to switch state of time').setFontSize(24).setDepth(10)
+            .setTintFill(0x000000)
+            .preFX.addGlow();
+        }
     }
 
     level2(){
@@ -92,7 +94,7 @@ class playscene extends gamescene {
         //console.log(hourglass.bottomsand.body.id);
         //console.log(hourglass.topsand);
 
-        new flag(this, this.w*0.1, this.h*0.17, "flag", this.player, "winscene", this.levelnum);
+        new flag(this, this.w*0.1, this.h*0.17, "flag", this.player, "winscene", this.levelnum, this.completed);
         let pressed = false
         this.matter.world.on('collisionstart', (event, bodyA, bodyB) =>{
             //console.log(bodyA.id);
@@ -113,6 +115,7 @@ class playscene extends gamescene {
         
     }
     level3(){
+        /*
         let text;
         if (this.input.gamepad.total === 0)
         {
@@ -139,6 +142,7 @@ class playscene extends gamescene {
                 this.sprites.push(this.add.sprite(Phaser.Math.Between(200, 600), Phaser.Math.Between(100, 500), 'dude'));
             }
         }
+        */
         let TopGround = this.matter.add.image(this.w*0.1, this.h*0.25, 'floor2');
         TopGround.setScale(1.1).setStatic(true);
         //TopGround.angle = 90;
@@ -176,6 +180,7 @@ class playscene extends gamescene {
         Button.setTintFill(0xff0000).setStatic(true)//d.setScale(); //(y, x)
         //Button.angle = 90;
 
+        this.box_check = false;
         this.Boxes = new boxes(this, 'box_on', 'box_off');
 
         this.Fan = new fan(this, 'fan', 'wind')
@@ -186,6 +191,7 @@ class playscene extends gamescene {
           //  console.log("box: "+this.Boxes.box1.body.id+" body a:"+bodyA.id);
             if(bodyB == this.Boxes.box1.body && bodyA == Button.body && !this.state){
                 this.Fan.turn_on();
+                this.box_check = true;
               //  console.log('fan on');
             }
             //restart scene because box electrocuted you
@@ -210,8 +216,8 @@ class playscene extends gamescene {
         });
 
         //move.on('start', () => this.FGround.setTintFill(0xffff00));
-        
-        this.l3_flag = new flag(this, 200, 400, "flag", this.player, "endscene", this.levelnum);
+        this.completed = true;
+        this.l3_flag = new flag(this, 200, 400, "flag", this.player, "endscene", this.levelnum, this.completed);
         this.l3_flag.flagimg.setScale(0.45)
         //NEED TO FIGURE OUT A WAY FOR THE FAN TO WORK TO RAISE THE PLAYER.
         //CONTEMPLATING REPLACING THE ROBOTS WITH TWO ELECTRICAL BOXES THAT NEED TO BE MOVED ONTO THE BUTTON (WILL STILL HARM YOU IN THE PAST
@@ -219,54 +225,21 @@ class playscene extends gamescene {
 
         //IN GENERAL, FIGURE OUT THE PAST & FUTURE BUSINESS, SO THAT THE OBJECTS ARE ACTIVE OR INACTIVE WHEN THEY ARE SUPPOSED TO BE
 
-    
     }  
 
     updates(){
        //console.log("box_x: "+ this.Boxes.box1.x+"\nboxy: "+ this.Boxes.box1.y);
         if(this.levelnum == 3){
+           // this.box_check = false;
            // console.log('it be level 3')
             //gonna need another check to see if we are in the future and the fan is active
-            if(this.player.x > this.w*0.8 && this.player.y > this.h*0.2 && !this.state && this.Boxes.box1.y > this.h*0.6 && this.Boxes.box1.x < this.w*0.7){
+            if(this.player.x > this.w*0.8 && this.player.y > this.h*0.2 && !this.state && this.Boxes.box1.y > this.h*0.5 && this.Boxes.box1.x < this.w*0.7 && this.box_check){
                 console.log('fan zone');
                 this.player.thrustLeft(0.01);
              }
             //keep updating the flag's position
              this.l3_flag.flagimg.x = this.FGround.x;
              this.l3_flag.flagimg.y = this.FGround.y-135;
-        }
-
-        const pads = this.input.gamepad.gamepads;
-
-        for (let i = 0; i < pads.length; i++)
-        {
-            const gamepad = pads[i];
-
-            if (!gamepad)
-            {
-                continue;
-            }
-
-            const sprite = this.sprites[i];
-            if (gamepad.left)
-            {
-                player.x -= 4;
-                sprite.flipX = false;
-            }
-            else if (gamepad.right)
-            {
-                sprite.x += 4;
-                sprite.flipX = true;
-            }
-
-            if (gamepad.up)
-            {
-                sprite.y -= 4;
-            }
-            else if (gamepad.down)
-            {
-                sprite.y += 4;
-            }
         }
     }
     
@@ -345,7 +318,7 @@ class fan{
 
 
 class flag{
-    constructor(scene, x, y, img, player, key, levelnum){
+    constructor(scene, x, y, img, player, key, levelnum, completed){
         this.flagimg = scene.matter.add.image(x, y, img);
         let transitionDuration = 1000;
         this.flagimg.setStatic(true);
@@ -355,7 +328,7 @@ class flag{
             if(bodyA === player.body && bodyB === this.flagimg.body){
                 scene.cameras.main.fade(transitionDuration, 0, 0, 0);
                 scene.time.delayedCall(transitionDuration, () => {
-                    scene.scene.start(key, {levelnum: levelnum});
+                    scene.scene.start(key, {levelnum: levelnum, completed: completed});
                 });
             }
         });
@@ -453,6 +426,7 @@ class swappingsand {
 class winscene extends Phaser.Scene{
     init(data){
         this.levelnum = data.levelnum || 1;
+        this.completed = data.completed || false;
     }
 
     constructor(){
@@ -469,7 +443,7 @@ class winscene extends Phaser.Scene{
         this.input.on("pointerdown", () =>{
             this.cameras.main.fade(transitionDuration, 0, 0, 0);
             this.time.delayedCall(transitionDuration, () => {
-                this.scene.start("playscene", {levelnum: this.levelnum+1});
+                this.scene.start("playscene", {levelnum: this.levelnum+1, completed: this.completed});
             });
         });
     }
@@ -477,6 +451,10 @@ class winscene extends Phaser.Scene{
 }
 
 class endscene extends Phaser.Scene{
+    init(data){
+        this.levelnum = data.levelnum || 1;
+        this.completed = data.completed || false;
+    }
     constructor(){
         super('endscene');
     }
@@ -495,7 +473,7 @@ class endscene extends Phaser.Scene{
         this.input.on("pointerdown", () =>{
             this.cameras.main.fade(transitionDuration, 0, 0, 0);
             this.time.delayedCall(transitionDuration, () => {
-                this.scene.start("playscene", {levelnum: this.levelnum = 1});
+                this.scene.start("playscene", {levelnum: this.levelnum = 1, completed: this.completed});
             });
         });
     }

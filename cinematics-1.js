@@ -80,8 +80,6 @@ class logo extends Phaser.Scene {
         })
 
         //+9pt offset on 'flop' y-coord
-        this.add.text(500, 500, "Studio logo")
-            .setColor(0xffffff);
         //this.add.image(500,400,'gameflop');
     }
 }
@@ -235,41 +233,6 @@ class title extends Phaser.Scene {
         //     gravity: 200
         // });
 
-    }
-
-}
-
-class intro extends Phaser.Scene {
-    constructor() {
-        super("intro");
-    }
-
-    preload() { }
-
-    create() {
-        this.add.text(500, 500, "Story intro")
-            .setColor(0xffffff);
-
-        this.input.on('pointerdown', () => {
-            this.cameras.main.fade(1000, 0, 0, 0);
-            this.time.delayedCall(1000, () => {
-                this.scene.start('end');
-            });
-        });
-    }
-
-}
-
-class end extends Phaser.Scene {
-    constructor() {
-        super("end");
-    }
-
-    preload() { }
-
-    create() {
-        this.add.text(500, 500, "Story ending.")
-            .setColor(0xffffff);
     }
 
 }
