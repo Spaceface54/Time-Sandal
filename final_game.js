@@ -16,14 +16,14 @@ class logo extends Phaser.Scene {
     create() {
         this.w = this.game.config.width;
         this.h = this.game.config.height;
-        let game = this.add.image(-260, this.h / 2 -10, 'game');
+        let game = this.add.image(-260, this.h / 2 - 10, 'game');
         let flop = this.add.image(this.w + 260, this.h / 2, 'flop');
-        let gameflop = this.add.image((this.w / 2 ) + 1, (this.h / 2) - 1, 'gameflop')
+        let gameflop = this.add.image((this.w / 2) + 1, (this.h / 2) - 1, 'gameflop')
             .setVisible(false);
 
         this.tweens.add({
             targets: game,
-            x: this.w/2-190,
+            x: this.w / 2 - 190,
             scale: 1,
             duration: 1000,
             ease: 'circ.in'
@@ -33,7 +33,7 @@ class logo extends Phaser.Scene {
             tweens: [
                 {
                     targets: flop,
-                    x: this.w/2+(1040-770),
+                    x: this.w / 2 + (1040 - 770),
                     scale: 1,
                     duration: 1000,
                     ease: 'circ.in'
@@ -61,7 +61,7 @@ class logo extends Phaser.Scene {
             flop.setVisible(true);
             gameflop.setVisible(false);
             flop.setOrigin(0.1, 0.9);
-            flop.setPosition(this.w/2+120, this.h/2+75);
+            flop.setPosition(this.w / 2 + 120, this.h / 2 + 75);
         });
 
         this.tweens.add({
@@ -101,6 +101,7 @@ class title extends Phaser.Scene {
         this.load.image('title4', 'Title 4.png');
         this.load.audio('title_song', 'Potential_title_song.mp3');
         this.load.image('sandal', 'time sandal.png');
+        this.load.image('sandy', 'SANDY.png');
     }
 
     create() {
@@ -124,17 +125,20 @@ class title extends Phaser.Scene {
             .setScale(1.3)
             .setDepth(10)
             .setVisible(false);
-        let sandal = this.add.image(this.w / 2, 900, 'sandal')
+        let sandal = this.add.image(this.w - 500, 900, 'sandal')
             .setDepth(10)
-            .setScale(0.6);
+            .setAngle(20)
+            .setScale(0.9);
+        let sandy = this.add.image(this.w / 2, 1600, 'sandy')
+            .setDepth(11);
 
 
-        this.tweens.add({
-            targets: sandal,
-            angle: 3600,
-            duration: 2000,
-            ease: 'Quint.inOut'
-        });
+        // this.tweens.add({
+        //     targets: sandal,
+        //     angle: 3600,
+        //     duration: 2000,
+        //     ease: 'Quint.inOut'
+        // });
 
         let start = this.add.text(this.w / 2, 650, "Start")
             .setFontSize(40)
@@ -653,6 +657,7 @@ class winscene extends Phaser.Scene {
         let wintext = this.add.text(w * 0.5, h * 0.5, "\t\t\t\t\tYOU WON!\n Tap to continue!");
         wintext.setOrigin(0.5, 0.5);
         wintext.setFontSize(65);
+        wintext.setTint(0x000000);
 
         let transitionDuration = 1000;
         this.input.on("pointerdown", () => {
@@ -679,10 +684,12 @@ class endscene extends Phaser.Scene {
         let wintext = this.add.text(w * 0.5, h * 0.5, "YOU BEAT THE GAME! Thank you for playing!\n\t\t\t\t\t\t\t\t\t\tClick to play again!!");
         wintext.setOrigin(0.5, 0.5);
         wintext.setFontSize(65);
+        wintext.setTint(0x000000);
 
         this.add.text(w * 0.5, h * 0.7, "Game created by:\nNathaniel Chu (Technology Lead)\nPeter Ampudia (Production Lead)\nIsai Rincon (Testing Lead)")
             .setOrigin(0.5, 0.5)
             .setFontSize(55)
+            .setTint(0x000000);
 
         let transitionDuration = 1000;
         this.input.on("pointerdown", () => {
@@ -693,101 +700,7 @@ class endscene extends Phaser.Scene {
         });
     }
 }
-/*
-class wood {
-    constructor(scene, x, y, img, onfireimg = null, scale = 1, changedimg = "ash", player){
-        this.displayed;
-        this.scale = scale;
-        this.img = img;
-        this.onfireimg = onfireimg;
-        this.x = x;
-        this.y = y;
-        this.scene = scene;
-        this.onfire = false;
-        this.future = false;
-        this.fire = null;
-        this.changedimg = changedimg;
-        this.player = player;
-        this.displaywall();
-        this.woods = [];
-        this.notstatic = false;
-        this.debug = 0;
-        ashpile = ;
-    }
-    burn(){
-        this.onfire = true;
-        if(this.fire == null != this.future && this.onfireimg != null){
-            this.fire = this.scene.add.image(this.x, this.y, this.onfireimg);
-            this.fire.setDepth(2);
-        }
-    }
-    futureswap(state){
-        if(this.onfire && state){
-            this.displayed.destroy();
-            this.displayed = this.scene.physics.add.sprite(this.x, this.y, this.changedimg);
-            this.displayed.setCollideWorldBounds(true);
-            if(this.onfireimg != null){
-                this.fire.destroy();
-                this.fire = null;
-            }
-            this.scene.physics.add.collider(this.displayed, this.player);
-        }
-        else if(this.onfire && !state){
-            this.x = this.displayed.x;
-            this.y = this.displayed.y;
-            this.displayed.destroy();
-            this.displaywall();
-            this.burn();
-            if(this.notstatic){
-                this.moving();
-            }
-        }
-    }
-    displaywall(){
-        this.displayed = this.scene.physics.add.sprite(this.x, this.y, this.img);
-        this.displayed.setImmovable(true);
-        this.displayed.body.allowGravity = false;
-        this.displayed.setScale(this.scale);
-        this.init();
-    }
-    init(){
-        this.scene.physics.add.collider(this.displayed, this.player);
-        if(this.woods != null){
-            for(let i = 0; i < this.woods.length; i++){
-                let thatonfire = this.woods[i].displayed.onfire
-                this.scene.physics.add.collider(this.displayed, this.woods[i].displayed, (displayed, wood) => {
-                    if( thatonfire && !this.onfire){
-                        console.log("fire!");
-                        this.onfire = true;
-                        this.burn();
-                    }
-                    if(this.debug == 0){
-                        console.log(wood);
-                        this.debug++;
-                    }
-                });
-            }
-        }
-    }
-    moving(){
-        this.notstatic = true;
-        this.displayed.setImmovable(false);
-        this.displayed.body.allowGravity = true;
-        this.displayed.setCollideWorldBounds(true);
-    }
-    updateloc(){
-        this.x = this.displayed.x;
-        this.y = this.displayed.y;
-        if(this.notstatic && this.fire!= null && this.onfire){
-            this.fire.x = this.x;
-            this.fire.x = this.x;
-        }
-    }
-    friction(){
-        return;
-    }
-    
-}*/
+
 
 const config = {
     type: Phaser.AUTO,
@@ -806,7 +719,7 @@ const config = {
     input: {
         gamepad: true
     },
-    backgroundColor: 0xbbbbbb,
+    backgroundColor: 0xffffff,
     scene: [logo, title, playscene, winscene, endscene]
 };
 const game = new Phaser.Game(config);
