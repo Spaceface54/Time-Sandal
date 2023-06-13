@@ -45,7 +45,7 @@ class gamescene extends Phaser.Scene {
         if(!this.looping.isPlaying && localStorage.getItem("soundplaying") == "y"){
             this.looping.play();
             this.looping.loop = true;
-            this.looping.volume = 0.45;
+            this.looping.volume = 0.15;
         }
         this.w = this.game.config.width;
         this.h = this.game.config.height;
