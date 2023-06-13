@@ -1,7 +1,7 @@
 class gamescene extends Phaser.Scene {
     sprite = [];
     init(data) {
-        this.levelnum = data.levelnum || 1;
+        this.levelnum = data.levelnum || 3;
         this.completed = data.completed || false;
     }
     constructor(key) {

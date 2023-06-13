@@ -186,13 +186,19 @@ class playscene extends gamescene {
         this.Fan = new fan(this, 'fan', 'wind')
 
         this.addUpdates(this.Boxes, this.Fan);
-
+        let pressed = false;
         this.matter.world.on('collisionstart', (event, bodyA, bodyB) =>{
           //  console.log("box: "+this.Boxes.box1.body.id+" body a:"+bodyA.id);
             if(bodyB == this.Boxes.box1.body && bodyA == Button.body && !this.state){
                 this.Fan.turn_on();
                 this.box_check = true;
+                
               //  console.log('fan on');
+            }
+            if((bodyB == this.Boxes.box1.body || bodyB == this.Boxes.futurebox1.body) && bodyA == Button.body && !pressed){
+                Button.setScale(1, 0.5);
+                Button.y += 35;
+                pressed = true;
             }
             //restart scene because box electrocuted you
             if(bodyB == this.Boxes.box1.body && bodyA == this.player.body && !this.state){
