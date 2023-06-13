@@ -286,18 +286,18 @@ class playscene extends gamescene {
         });
         this.addUpdates(wall, burningbarrel);
         if (!this.completed) {
-            this.add.text(this.w * 0.1, this.h * 0.4, 'Tap and hold here to move left').setFontSize(24)
-                .setTintFill(0x000000)
-                .preFX.addGlow();
-            this.add.text(this.w * 0.65, this.h * 0.4, 'Tap and hold here to move right').setFontSize(24)
-                .setTintFill(0x000000)
-                .preFX.addGlow();
-            this.add.text(this.w * 0.4, this.h * 0.2, 'Tap here to jump straight up').setFontSize(24)
-                .setTintFill(0x000000)
-                .preFX.addGlow();
-            this.add.text(this.w * 0.4, this.h * 0.8, 'Tap here to switch state of time').setFontSize(24).setDepth(10)
-                .setTintFill(0x000000)
-                .preFX.addGlow();
+            this.add.text(this.w * 0.05, this.h * 0.4, 'Tap and hold here to move left').setFontSize(34)
+                .setTintFill(0xffffff)
+              //  .preFX.addGlow();
+            this.add.text(this.w * 0.65, this.h * 0.4, 'Tap and hold here to move right').setFontSize(34)
+                .setTintFill(0xffffff)
+                //.preFX.addGlow();
+            this.add.text(this.w * 0.4, this.h * 0.2, 'Tap here to jump straight up').setFontSize(34)
+                .setTintFill(0xffffff)
+                //.preFX.addGlow();
+            this.add.text(this.w * 0.4, this.h * 0.8, 'Tap here to switch state of time').setFontSize(34).setDepth(10)
+                .setTintFill(0xffffff)
+                //.preFX.addGlow();
         }
     }
 
@@ -344,34 +344,6 @@ class playscene extends gamescene {
 
     }
     level3() {
-        /*
-        let text;
-        if (this.input.gamepad.total === 0)
-        {
-            text = this.add.text(10, 10, 'Press any button on a connected Gamepad', { font: '16px Courier', fill: '#00ff00' });
-
-            this.input.gamepad.once('connected', function (pad)
-            {
-
-                console.log('connected', pad.id);
-
-                for (let i = 0; i < this.input.gamepad.total; i++)
-                {
-                    this.sprites.push(this.add.sprite(Phaser.Math.Between(200, 600), Phaser.Math.Between(100, 500), 'dude'));
-                }
-
-                text.destroy();
-
-            }, this);
-        }
-        else
-        {
-            for (let i = 0; i < this.input.gamepad.total; i++)
-            {
-                this.sprites.push(this.add.sprite(Phaser.Math.Between(200, 600), Phaser.Math.Between(100, 500), 'dude'));
-            }
-        }
-        */
         let TopGround = this.matter.add.image(this.w * 0.1, this.h * 0.25, 'floor2');
         TopGround.setScale(1.1).setStatic(true);
 
