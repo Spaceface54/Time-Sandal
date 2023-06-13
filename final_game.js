@@ -101,7 +101,7 @@ class title extends Phaser.Scene {
         this.load.image('title4', 'Title 4.png');
         this.load.audio('title_song', 'Potential_title_song.mp3');
         this.load.image('sandal', 'time sandal.png');
-        this.load.image('sandy', 'SANDY.png');
+        this.load.image('sandy', 'sandy.png');
     }
 
     create() {
